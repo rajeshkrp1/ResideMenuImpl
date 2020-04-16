@@ -1,34 +1,48 @@
 package com.rkp.residemenuimpl;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.graphics.Point;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.cardview.widget.CardView;
 
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
-
 import com.special.ResideMenu.ResideMenu;
+import com.special.ResideMenu.TouchDisableView;
 
-import static android.view.View.VISIBLE;
 import static android.view.View.inflate;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    public static final int DIRECTION_LEFT = 0;
+    public static final int DIRECTION_RIGHT = 1;
+    private static final String TAG = "MainActivity";
+    CardView cvInner, cvDashboard;
+    AppCompatImageView iv_icon;
+    int x1, x2, y1, y2, dx, dy;
+    String direction;
+    Context mContext;
     private ResideMenu resideMenu;
     private RelativeLayout.LayoutParams layoutParams;
     private FrameLayout.LayoutParams fragParams;
-    CardView cvInner,cvDashboard;
-    AppCompatImageView iv_icon;
     private View mSideMenuView = null;
-    float x1, x2, y1, y2, dx, dy;
-    String direction;
-    private static final String TAG = "MainActivity";
-
-
+    private float mScaleValue = 0.41f;
+    private TouchDisableView viewActivity;
+    private ObjectAnimator lftToRgt, rgtToLft;
+    private float halfW;
+    private AnimatorSet animatorSet;
+    private int percentage;
 
 
     private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
@@ -42,56 +56,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     };
-
-
-
+    private boolean isOpened;
+    private int screenWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-
-        cvInner=findViewById(R.id.cv_inner);
-        cvDashboard=findViewById(R.id.cv_dashboard);
-        iv_icon=findViewById(R.id.iv_icon);
-
-
-        iv_icon.setOnClickListener(this);
-
-
-
-        layoutParams = (RelativeLayout.LayoutParams) cvInner.getLayoutParams();
-        fragParams = (FrameLayout.LayoutParams) cvDashboard.getLayoutParams();
-        resideMenu = new ResideMenu(this, cvDashboard, cvInner);
-        resideMenu = new ResideMenu(this, cvDashboard, cvInner);
-        resideMenu.attachToActivity(this);
-
-
+        initViews();
 
 
         cvDashboard.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
+                final int X = (int) event.getRawX();
+                final int Y = (int) event.getRawY();
 
                 switch (event.getAction()) {
                     case (MotionEvent.ACTION_DOWN):
 
-                        x1 = event.getX();
-                        y1 = event.getY();
+                        x1 = (int) event.getX();
+                        y1 = (int) event.getY();
                         Log.d(TAG, "ACTION_DOWN: " + x1 + " ,  " + y1);
                         break;
 
                     case (MotionEvent.ACTION_MOVE):
                         Log.d(TAG, "ACTION_MOVE: " + x1 + " ,  " + y1);
+                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1);
+
+
                         break;
 
+
                     case (MotionEvent.ACTION_UP): {
-                        x2 = event.getX();
+                       /* x2 = event.getX();
                         y2 = event.getY();
                         dx = x2 - x1;
                         dy = y2 - y1;
-                        Log.d(TAG, "ACTION_UP: " + x1 + " ,  " + y1);
+                        Log.d(TAG, "ACTION_UP: " + x1 + " ,  " + y1);*/
 
 
                         // Use dx and dy to determine the direction of the move
@@ -119,6 +123,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void initViews() {
+        animatorSet = new AnimatorSet();
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+         screenWidth = displayMetrics.widthPixels;
+
+        Log.d(TAG,screenWidth+"    screen");
+
+
+        mContext = MainActivity.this;
+        cvInner = findViewById(R.id.cv_inner);
+        cvDashboard = findViewById(R.id.cv_dashboard);
+        iv_icon = findViewById(R.id.iv_icon);
+
+        iv_icon.setOnClickListener(this);
+
+        layoutParams = (RelativeLayout.LayoutParams) cvInner.getLayoutParams();
+        fragParams = (FrameLayout.LayoutParams) cvDashboard.getLayoutParams();
+        resideMenu = new ResideMenu(this, cvDashboard, cvInner);
+        resideMenu = new ResideMenu(this, cvDashboard, cvInner);
+        resideMenu.attachToActivity(this);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -137,43 +166,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.iv_icon:
-                resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
+                //resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT);
+
+
                 break;
 
         }
     }
 
-   /* @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        switch(event.getAction()) {
-
-
-        }
-            return super.onTouchEvent(event);
-
-    }*/
-
-    private void openDoor(){
-
-        cvDashboard.setCardElevation(this.getResources().getDimension(com.special.ResideMenu.R.dimen._10sdp));
-        cvDashboard.setElevation(this.getResources().getDimension(com.special.ResideMenu.R.dimen._10sdp));
-        cvInner.setCardElevation(this.getResources().getDimension(com.special.ResideMenu.R.dimen._10sdp));
-       // resideMenu.scrollViewRightMenu.setElevation(-this.getResources().getDimension(com.special.ResideMenu.R.dimen._10sdp));
-
-
-        //imageViewShadow.setVisibility(VISIBLE);
-        //imageViewBackground.setVisibility(VISIBLE);
-
-
-
-
-
-
-
-
-    }
 
 }

@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
-    android:padding="@dimen/_50sdp"
     android:focusableInTouchMode="true"
+    android:padding="@dimen/_50sdp"
     app:cardElevation="0dp">
 
     <RelativeLayout
@@ -21,39 +21,41 @@
             android:id="@+id/cv_inner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardElevation="0dp">
+            app:cardElevation="0dp"
+            >
 
 
-        <RelativeLayout
-            android:id="@+id/rl_aertrip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="visible">
-
-
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_icon"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentEnd="true"
-                android:backgroundTint="@color/colorAccent"
-                tools:src="@drawable/ic_launcher"
-                android:background="@color/cardview_light_background"
-                android:src="@drawable/ic_launcher_background"/>
-
-
-            <View
-                android:id="@+id/v_right"
-                android:layout_width="@dimen/_50sdp"
+            <RelativeLayout
+                android:id="@+id/rl_aertrip"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="100dp" />
+                android:layout_centerInParent="true"
+                android:visibility="visible"
 
-        </RelativeLayout>
+                >
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_icon"
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/cardview_light_background"
+                    android:backgroundTint="@color/colorAccent"
+                    android:src="@drawable/ic_launcher_background"
+                    tools:src="@drawable/ic_launcher" />
+
+
+                <View
+                    android:id="@+id/v_right"
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="100dp" />
+
+            </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
     </RelativeLayout>
