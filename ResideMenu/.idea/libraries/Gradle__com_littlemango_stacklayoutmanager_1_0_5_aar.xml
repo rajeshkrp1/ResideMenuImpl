@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.littlemango:stacklayoutmanager:1.0.5@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9cd0e4dcb143b8e2cc36424a9f51cb4b/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9cd0e4dcb143b8e2cc36424a9f51cb4b/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.littlemango/stacklayoutmanager/1.0.5/a273031a4f2baf14e01b6cad44f691ad6e981bb6/stacklayoutmanager-1.0.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

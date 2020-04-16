@@ -1,0 +1,2 @@
+rootProject.name='ResideMenuImpl'
+include ':app', ':ResideMenu'

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cv_dashboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="@dimen/_50sdp"
+    android:focusableInTouchMode="true"
+    app:cardElevation="0dp">
+
+    <RelativeLayout
+        android:id="@+id/rl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.aertrip.activities.MainActivity">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_inner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardElevation="0dp">
+
+
+        <RelativeLayout
+            android:id="@+id/rl_aertrip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="visible">
+
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_icon"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentEnd="true"
+                android:backgroundTint="@color/colorAccent"
+                tools:src="@drawable/ic_launcher"
+                android:background="@color/cardview_light_background"
+                android:src="@drawable/ic_launcher_background"/>
+
+
+            <View
+                android:id="@+id/v_right"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="100dp" />
+
+        </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
+
+
+
+
+
+

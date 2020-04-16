@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ResideMenu.iml" filepath="$PROJECT_DIR$/ResideMenu.iml" group="aertrip/ResideMenu" />
+      <module fileurl="file://$PROJECT_DIR$/../aertrip.iml" filepath="$PROJECT_DIR$/../aertrip.iml" group="aertrip" />
+      <module fileurl="file://$PROJECT_DIR$/../app/app.iml" filepath="$PROJECT_DIR$/../app/app.iml" group="aertrip/app" />
+      <module fileurl="file://$PROJECT_DIR$/../imagecropper/imagecropper.iml" filepath="$PROJECT_DIR$/../imagecropper/imagecropper.iml" group="aertrip/imagecropper" />
+      <module fileurl="file://$PROJECT_DIR$/../library/library.iml" filepath="$PROJECT_DIR$/../library/library.iml" group="aertrip/library" />
+      <module fileurl="file://$PROJECT_DIR$/../photoview/photoview.iml" filepath="$PROJECT_DIR$/../photoview/photoview.iml" group="aertrip/photoview" />
+    </modules>
+  </component>
+</project>

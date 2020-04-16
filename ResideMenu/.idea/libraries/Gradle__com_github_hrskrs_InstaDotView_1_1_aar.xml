@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.hrskrs:InstaDotView:1.1@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1c8fbaf9fe0cdb4ff95884b64201171a/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1c8fbaf9fe0cdb4ff95884b64201171a/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.hrskrs/InstaDotView/1.1/b10aa200ba893be68e1bc2a7e2649cd256393501/InstaDotView-1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

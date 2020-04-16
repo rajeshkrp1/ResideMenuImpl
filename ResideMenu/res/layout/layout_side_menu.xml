@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/ll_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_55sdp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/fl_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_profile"
+                android:layout_width="@dimen/_92sdp"
+                android:layout_height="@dimen/_92sdp"
+                android:layout_gravity="center"
+                app:civ_border_width="@dimen/_5sdp" />
+
+            <!--<android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_initials"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:background="@drawable/bg_white_circle_with_border"
+                android:textColor="@color/c_bg_spinner"
+                android:fontFamily="@font/source_sans_pro_regular"
+                android:textSize="@dimen/_47ssp"
+                tools:text="RV"
+                android:layout_width="@dimen/_92sdp"
+                android:layout_height="@dimen/_92sdp"/>-->
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingStart="@dimen/_10sdp"
+            android:paddingEnd="@dimen/_10sdp"
+            android:textSize="@dimen/_18ssp"
+
+            />
+
+        <TextView
+            android:id="@+id/tv_view_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="@dimen/_3sdp"
+            android:paddingBottom="@dimen/_5sdp"
+            android:textSize="@dimen/_12ssp"
+            android:text="dsjhasdfgajhdddgadr"
+            android:transitionName="iv_profile" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_profile_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/_16sdp"
+               android:text="sgcfjhgsdjacgjsdgvjsf"
+                android:textSize="@dimen/_16ssp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/_16sdp"
+                android:text="sgcfjhgsdjacgjsdgvjsf"
+                android:textSize="@dimen/_16ssp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/_16sdp"
+                android:text="sgcfjhgsdjacgjsdgvjsf"
+                android:textSize="@dimen/_16ssp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/_16sdp"
+                android:text="sgcfjhgsdjacgjsdgvjsf"
+                android:textSize="@dimen/_16ssp" />
+            <TextView
+                android:id="@+id/tv_bookings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/_16sdp"
+                android:text="sgcfjhgsdjacgjsdgvjsf"
+                android:textSize="@dimen/_16ssp" />
+
+
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
