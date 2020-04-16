@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 switch (event.getAction()) {
                     case (MotionEvent.ACTION_DOWN):
+
                         x1 = event.getX();
                         y1 = event.getY();
                         Log.d(TAG, "ACTION_DOWN: " + x1 + " ,  " + y1);
