@@ -52,6 +52,7 @@ public class ResideMenu extends FrameLayout {
     private View scrollViewLeftMenu;
     private View scrollViewRightMenu;
     private View scrollViewMenu;
+    private int scrW;
     /**
      * Current attaching activity.
      */
@@ -75,13 +76,16 @@ public class ResideMenu extends FrameLayout {
     private List<ResideMenuItem> rightMenuItems;
     private DisplayMetrics displayMetrics = new DisplayMetrics();
     private OnMenuListener menuListener;
+    private OnMenuDublicateListener menuDublicateListener;
     private float lastRawX;
     private boolean isInIgnoredView = false;
     private int scaleDirection = DIRECTION_LEFT;
     private int pressedState = PRESSED_DOWN;
     private List<Integer> disabledSwipeDirection = new ArrayList<Integer>();
     // Valid scale factor is between 0.0f and 1.0f.
+    //private float mScaleValue = 0.41f;
     private float mScaleValue = 0.41f;
+    private float multiPlyerValye = 1.6f;
     private boolean mUse3D;
     private float lastActionDownX, lastActionDownY;
     private RelativeLayout.LayoutParams layoutParams;
@@ -129,10 +133,64 @@ public class ResideMenu extends FrameLayout {
 
         }
     };
+
+
+    private Animator.AnimatorListener animationDublicateListener = new Animator.AnimatorListener() {
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+            if (isOpened()) {
+                showScrollViewMenu(scrollViewMenu);
+                if (menuDublicateListener != null)
+                    menuDublicateListener.openDublicateMenu();
+            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            // reset the view;
+            if (isOpened()) {
+                viewActivity.setTouchDisable(true);
+                viewActivity.setOnClickListener(viewActivityOnClickListener);
+            } else {
+                viewActivity.setTouchDisable(false);
+                viewActivity.setOnClickListener(null);
+                hideScrollViewMenu(scrollViewLeftMenu);
+                hideScrollViewMenu(scrollViewRightMenu);
+                if (menuDublicateListener != null) {
+                    menuDublicateListener.closeDublicateMenu();
+                }
+            }
+            svRightMenu.fullScroll(View.FOCUS_UP);
+
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+
+        }
+
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
+    };
+
+
+
+
+
+
+
     private OnClickListener viewActivityOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (isOpened()) closeMenu();
+            if (isOpened()){
+                closeMenu();
+                closeDublicateMenu(ResideMenu.DIRECTION_RIGHT,00,00,true);
+
+            } closeMenu();
         }
     };
     private boolean openMenuStarted;
@@ -417,6 +475,12 @@ public class ResideMenu extends FrameLayout {
         this.menuListener = menuListener;
     }
 
+    public void setMenuDublicateListener(OnMenuDublicateListener menuListener) {
+        this.menuDublicateListener = menuListener;
+    }
+
+
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         // Edge Swipe
@@ -587,10 +651,28 @@ public class ResideMenu extends FrameLayout {
 
 
 
-    public void  openDublicateMenu(int direction,int axis_x) {
+    public void  openDublicateMenu(int direction,int axis_x,int xOffSet,int scaleX,boolean openstatus) {
+/*            float  mScaleValueY=1.0f;
+            multiPlyerValye=1.0f;
+        if(xOffSet>0 &&  xOffSet<200){
+            mScaleValue=0.7f;
+            mScaleValueY=mScaleValue*1.1f;
 
+            multiPlyerValye=1.2f;
+        }else if(xOffSet>200 && xOffSet<400){
+            mScaleValue=0.6f;
+            mScaleValueY=mScaleValue*1.2f;
+            multiPlyerValye=1.4f;
+        }else if(xOffSet>400 && xOffSet<600){
+            mScaleValue=0.5f;
+            mScaleValueY=mScaleValue*1.3f;
+            multiPlyerValye=1.5f;
+        }else {
+            mScaleValue = 0.4f;
+            mScaleValueY=mScaleValue*1.4f;
+            multiPlyerValye=1.6f;
+        }*/
         if(!openMenuStarted){
-
             cvDashboard.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
             cvDashboard.setElevation(activity.getResources().getDimension(R.dimen._10sdp));
             cvInner.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
@@ -623,26 +705,31 @@ public class ResideMenu extends FrameLayout {
             }
         });
 
-        setScaleDirection(direction);
-        isOpened = true;
+        setdublicateScaleDirection(direction,axis_x,xOffSet);
+        if(openstatus)
+       isOpened = true;
 
-        AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity, mScaleValue, mScaleValue * 1.6f);
+        AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity ,/*axis_x/scrW*/mScaleValue,mScaleValue /*mScaleValue*//*(axis_x/scrW)*/*multiPlyerValye/*1.6f*/);
         AnimatorSet scaleDown_shadow = buildScaleDownAnimation(imageViewShadow,
-                (mScaleValue + shadowAdjustScaleX), (mScaleValue + shadowAdjustScaleY) * 1.6f);
+                (mScaleValue/*(axis_x/scrW)*/ + shadowAdjustScaleX), (/*(axis_x/scrW)*/mScaleValue + shadowAdjustScaleY) *multiPlyerValye/*1.6f*/);
         AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 1.0f);
         AnimatorSet aplha_rightMenu = buildMenuAnimationOpen(layoutRightMenu, 1.0f);
-        scaleDown_activity.addListener(animationListener);
+        //scaleDown_activity.addListener(animationListener);
+        scaleDown_activity.addListener(animationDublicateListener);
+
         scaleDown_activity.playTogether(scaleDown_shadow, alpha_menu, aplha_rightMenu, animator, outerRadiusAnimator, translation);
-        scaleDown_activity.setDuration(800);
-        scaleDown_activity.setInterpolator(AnimationUtils.loadInterpolator(activity,
-                android.R.anim.decelerate_interpolator));
+       // scaleDown_activity.setDuration(800);
+        scaleDown_activity.setDuration(0);
+        scaleDown_activity.setInterpolator(AnimationUtils.loadInterpolator(activity, android.R.anim.decelerate_interpolator));
         scaleDown_activity.start();
 
 
     }
 
 
-    public void closeDublicateMenu(int direction,int axis_x) {
+    public void closeDublicateMenu(int direction,int axis_x,int offSet,boolean menuOpenSatatus) {
+
+
         cvDashboard.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvDashboard.setElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvInner.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
@@ -666,24 +753,29 @@ public class ResideMenu extends FrameLayout {
             }
         });
 
-        animator.setDuration(250);
-        outerRadiusAnimator.setDuration(250);
+        animator.setDuration(0);
+        outerRadiusAnimator.setDuration(0);
         PropertyValuesHolder translateX = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0, 600-axis_x);
         ObjectAnimator translation = ObjectAnimator.ofPropertyValuesHolder(layoutRightMenu, translateX);
 
+        if(menuOpenSatatus)
         isOpened = false;
-        AnimatorSet scaleUp_activity = buildScaleUpAnimation(viewActivity, 1.0f, 1.0f);
-        AnimatorSet scaleUp_shadow = buildScaleUpAnimation(imageViewShadow, 1.0f, 1.0f);
+        AnimatorSet scaleUp_activity = buildScaleUpAnimation(viewActivity, mScaleValue/*1.0f*//*axis_x/scrW*/, 1.0f);
+        AnimatorSet scaleUp_shadow = buildScaleUpAnimation(imageViewShadow, mScaleValue/*1.0f*//*axis_x/scrW*/, 1.0f);
         AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 0.0f);
         AnimatorSet alpha_right_menu = buildMenuAnimationOpen(layoutRightMenu, 0.0f);
 
-        scaleUp_activity.addListener(animationListener);
+        //scaleUp_activity.addListener(animationListener);
+        scaleUp_activity.addListener(animationDublicateListener);
+
         scaleUp_activity.playTogether(scaleUp_shadow, alpha_menu, alpha_right_menu, animator, outerRadiusAnimator, translation);
         scaleUp_activity.setInterpolator(AnimationUtils.loadInterpolator(activity,
                 android.R.anim.accelerate_interpolator
         ));
-        scaleUp_activity.setDuration(600);
+        scaleUp_activity.setDuration(0);
         scaleUp_activity.start();
+
+
 
     }
 
@@ -753,6 +845,42 @@ public class ResideMenu extends FrameLayout {
         return disabledSwipeDirection.contains(direction);
     }
 
+
+
+    public void setdublicateScaleDirection(int direction,int axis_x,int x_ofset) {
+
+        int screenWidth = getScreenWidth();
+        scrW=getScreenHeight();
+
+        float pivotX=0.5f;
+        float pivotY = getScreenHeight() * 0.5f;
+
+        if (direction == DIRECTION_LEFT) {
+            scrollViewMenu = scrollViewLeftMenu;
+            pivotX = (screenWidth-axis_x) * -0.5f;
+            Log.d("ASD",pivotX+"     pivot x");
+        } else {
+            scrollViewMenu = scrollViewRightMenu;
+           // pivotX = screenWidth * -0.0002f;
+           // pivotX = screenWidth * -0.5f;
+            if (x_ofset/2>=(screenWidth*-0.5f)){
+                pivotX=x_ofset/2;
+            }
+            Log.d("ASD",pivotX+"     pivot x");
+            Log.d("ASD",pivotY+"     pivot Y");
+
+
+
+        }
+
+        ViewHelper.setPivotX(viewActivity, pivotX);
+        ViewHelper.setPivotY(viewActivity, pivotY);
+        ViewHelper.setPivotX(imageViewShadow, pivotX);
+        ViewHelper.setPivotY(imageViewShadow, pivotY);
+        scaleDirection = direction;
+
+    }
+
     public void setScaleDirection(int direction) {
 
         int screenWidth = getScreenWidth();
@@ -765,7 +893,11 @@ public class ResideMenu extends FrameLayout {
         } else {
             scrollViewMenu = scrollViewRightMenu;
             pivotX = screenWidth * -0.5f;
+
         }
+        Log.e("PIVOTx",pivotX+"");
+        Log.e("PIVOTy",pivotY+"");
+
 
         ViewHelper.setPivotX(viewActivity, pivotX);
         ViewHelper.setPivotY(viewActivity, pivotY);
@@ -1059,6 +1191,25 @@ public class ResideMenu extends FrameLayout {
          */
         void closeMenu();
     }
+
+
+    public interface OnMenuDublicateListener {
+
+        /**
+         * This method will be called at the finished time of opening menu animations.
+         */
+        void openDublicateMenu();
+
+        /**
+         * This method will be called at the finished time of closing menu animations.
+         */
+        void closeDublicateMenu();
+    }
+
+
+
+
+
 
 
 }
