@@ -197,7 +197,7 @@ public class ResideMenu extends FrameLayout {
         this.cvDashboard = cvDashboard;
         initViews(context, -1, -1);
         edgeSwipeController = new EdgeSwipeController((Activity) context);
-        edgeSwipeController.setSwipeListener(new EdgeSwipeController.OnSwipeListener() {
+       /* edgeSwipeController.setSwipeListener(new EdgeSwipeController.OnSwipeListener() {
             @Override
             public void rightEdgeSwipe() {
                 if (!isOpened)
@@ -210,7 +210,7 @@ public class ResideMenu extends FrameLayout {
                     closeMenu();
 
             }
-        });
+        });*/
     }
 
     /**
@@ -658,26 +658,21 @@ public class ResideMenu extends FrameLayout {
     public void openDublicateMenu(int direction, int axis_x, int xOffSet, int scaleX, boolean openstatus) {
 /*            float  mScaleValueY=1.0f;
             multiPlyerValye=1.0f;
-        if(xOffSet>0 &&  xOffSet<200){
+        if(xOffSet<0 &&  xOffSet<200){
             mScaleValue=0.7f;
-            mScaleValueY=mScaleValue*1.1f;
-
             multiPlyerValye=1.2f;
         }else if(xOffSet>200 && xOffSet<400){
             mScaleValue=0.6f;
-            mScaleValueY=mScaleValue*1.2f;
             multiPlyerValye=1.4f;
         }else if(xOffSet>400 && xOffSet<600){
             mScaleValue=0.5f;
-            mScaleValueY=mScaleValue*1.3f;
             multiPlyerValye=1.5f;
         }else {
             mScaleValue = 0.4f;
-            mScaleValueY=mScaleValue*1.4f;
             multiPlyerValye=1.6f;
         }*/
 
-        final String TAG = ResideMenu.TAG_DEFAULT + "|openDublicateMenu";
+        final String TAG = ResideMenu.TAG_DEFAULT + "|openDMenu";
         if (!openMenuStarted) {
             cvDashboard.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
             cvDashboard.setElevation(activity.getResources().getDimension(R.dimen._10sdp));
@@ -689,22 +684,31 @@ public class ResideMenu extends FrameLayout {
             openMenuStarted = true;
         }
 
-        PropertyValuesHolder translateX = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 600 - axis_x, 0);
+        PropertyValuesHolder translateX = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 600 - (-xOffSet), 0);
         ObjectAnimator translation = ObjectAnimator.ofPropertyValuesHolder(layoutRightMenu, translateX);
+        translation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Log.d(TAG, "onAnimationUpdate: translation " + animation.getAnimatedValue());
+            }
+        });
 
         layoutParams = (RelativeLayout.LayoutParams) cvInner.getLayoutParams();
         ValueAnimator outerRadiusAnimator = ValueAnimator.ofInt(0, (int) getResources().getDimension(R.dimen._10sdp));
         outerRadiusAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                Log.d(TAG,"onAnimationUpdate: outerRadiusAnimator " + valueAnimator.getAnimatedValue()+"");
                 cvDashboard.setRadius((int) valueAnimator.getAnimatedValue());
                 cvDashboard.requestLayout();
             }
         });
         ValueAnimator animator = ValueAnimator.ofInt(0, (int) getResources().getDimension(R.dimen._8sdp));
+
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                Log.d(TAG,"onAnimationUpdate: animator"+valueAnimator.getAnimatedValue()+"");
                 layoutParams.setMargins(0, 0, (int) valueAnimator.getAnimatedValue(), 0);
                 cvInner.setRadius((int) valueAnimator.getAnimatedValue());
                 cvInner.requestLayout();
@@ -761,7 +765,7 @@ public class ResideMenu extends FrameLayout {
 
         animator.setDuration(0);
         outerRadiusAnimator.setDuration(0);
-        PropertyValuesHolder translateX = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0, 600 - axis_x);
+        PropertyValuesHolder translateX = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0, 600 - (-axis_x));
         ObjectAnimator translation = ObjectAnimator.ofPropertyValuesHolder(layoutRightMenu, translateX);
 
         if (menuOpenSatatus)
@@ -875,6 +879,10 @@ public class ResideMenu extends FrameLayout {
             if (x_ofset / 2 >= (screenWidth * -0.5f)) {
                 pivotX = x_ofset / 2;
             }
+
+
+           float  newX= (float) (screenWidth-((screenWidth*0.41)/100))*0.5f;
+            Log.d("ASD",newX+"     new x");
             Log.d("ASD", pivotX + "     pivot x");
             Log.d("ASD", pivotY + "     pivot Y");
 
@@ -886,6 +894,7 @@ public class ResideMenu extends FrameLayout {
         ViewHelper.setPivotX(imageViewShadow, pivotX);
         ViewHelper.setPivotY(imageViewShadow, pivotY);
         scaleDirection = direction;
+
 
     }
 
@@ -905,7 +914,6 @@ public class ResideMenu extends FrameLayout {
         }
         Log.e("PIVOTx", pivotX + "");
         Log.e("PIVOTy", pivotY + "");
-
 
         ViewHelper.setPivotX(viewActivity, pivotX);
         ViewHelper.setPivotY(viewActivity, pivotY);

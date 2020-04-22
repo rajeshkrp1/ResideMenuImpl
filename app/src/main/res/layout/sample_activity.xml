@@ -17,6 +17,20 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/g_10"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/_10sdp"/>
+    <androidx.constraintlayout.widget.Guideline
+
+        android:id="@+id/g_5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/_5sdp"/>
+
 
     <Button
         android:id="@+id/btn"
@@ -24,19 +38,29 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guid"
-        app:layout_constraintRight_toRightOf="@+id/guid"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="sdfsfdsaffyfdasfg" />
 
 
     <Button
+        android:id="@+id/btn_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@+id/btn"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/guid"
         app:layout_constraintTop_toBottomOf="@+id/btn"
         />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/guid"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guid"
+        android:text="dasdasdfasdasdasd"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
