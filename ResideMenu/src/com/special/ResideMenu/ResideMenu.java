@@ -656,7 +656,7 @@ public class ResideMenu extends FrameLayout {
 
 
     public void openDublicateMenu(int direction, int axis_x, int xOffSet, int scaleX, boolean openstatus) {
-/*            float  mScaleValueY=1.0f;
+            float  mScaleValueY=1.0f;
             multiPlyerValye=1.0f;
         if(xOffSet<0 &&  xOffSet<200){
             mScaleValue=0.7f;
@@ -670,7 +670,7 @@ public class ResideMenu extends FrameLayout {
         }else {
             mScaleValue = 0.4f;
             multiPlyerValye=1.6f;
-        }*/
+        }
 
         final String TAG = ResideMenu.TAG_DEFAULT + "|openDMenu";
         if (!openMenuStarted) {
