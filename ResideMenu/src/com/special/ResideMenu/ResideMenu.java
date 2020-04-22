@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class ResideMenu extends FrameLayout {
 
-
+    private static final String TAG_DEFAULT = "ResideMenu";
     public static final int DIRECTION_LEFT = 0;
     public static final int DIRECTION_RIGHT = 1;
     private static final int PRESSED_MOVE_HORIZONTAL = 2;
@@ -178,19 +178,15 @@ public class ResideMenu extends FrameLayout {
     };
 
 
-
-
-
-
-
     private OnClickListener viewActivityOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (isOpened()){
+            if (isOpened()) {
                 closeMenu();
-                closeDublicateMenu(ResideMenu.DIRECTION_RIGHT,00,00,true);
+                closeDublicateMenu(ResideMenu.DIRECTION_RIGHT, 00, 00, true);
 
-            } closeMenu();
+            }
+            closeMenu();
         }
     };
     private boolean openMenuStarted;
@@ -480,7 +476,6 @@ public class ResideMenu extends FrameLayout {
     }
 
 
-
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         // Edge Swipe
@@ -594,14 +589,13 @@ public class ResideMenu extends FrameLayout {
 */
 
 
-
-
     }
 
     /**
      * Show the menu;
      */
-    public void  openMenu(int direction) {
+    public void openMenu(int direction) {
+        final String TAG = ResideMenu.TAG_DEFAULT + "|openMenu";
         cvDashboard.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvDashboard.setElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvInner.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
@@ -612,12 +606,20 @@ public class ResideMenu extends FrameLayout {
         imageViewBackground.setVisibility(VISIBLE);
         PropertyValuesHolder translateX = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 600, 0);
         ObjectAnimator translation = ObjectAnimator.ofPropertyValuesHolder(layoutRightMenu, translateX);
+        translation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Log.d(TAG, "onAnimationUpdate: translation " + animation.getAnimatedValue());
+            }
+        });
         layoutParams = (RelativeLayout.LayoutParams) cvInner.getLayoutParams();
         ValueAnimator outerRadiusAnimator = ValueAnimator.ofInt(0, (int) getResources().getDimension(R.dimen._10sdp));
         outerRadiusAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                cvDashboard.setRadius((int) valueAnimator.getAnimatedValue());
+                int animatedValue = (int) valueAnimator.getAnimatedValue();
+                Log.d(TAG, "onAnimationUpdate: outerRadiusAnimator" + animatedValue);
+                cvDashboard.setRadius(animatedValue);
                 cvDashboard.requestLayout();
             }
         });
@@ -625,8 +627,10 @@ public class ResideMenu extends FrameLayout {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                layoutParams.setMargins(0, 0, (int) valueAnimator.getAnimatedValue(), 0);
-                cvInner.setRadius((int) valueAnimator.getAnimatedValue());
+                int animatedValue = (int) valueAnimator.getAnimatedValue();
+                Log.d(TAG, "onAnimationUpdate: animator " + animatedValue);
+                layoutParams.setMargins(0, 0, animatedValue, 0);
+                cvInner.setRadius(animatedValue);
                 cvInner.requestLayout();
             }
         });
@@ -634,24 +638,24 @@ public class ResideMenu extends FrameLayout {
         setScaleDirection(direction);
         isOpened = true;
 
-        AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity, mScaleValue, mScaleValue * 1.6f);
+        AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity, mScaleValue, mScaleValue * 1.6f, TAG);
         AnimatorSet scaleDown_shadow = buildScaleDownAnimation(imageViewShadow,
-                (mScaleValue + shadowAdjustScaleX), (mScaleValue + shadowAdjustScaleY) * 1.6f);
-        AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 1.0f);
-        AnimatorSet aplha_rightMenu = buildMenuAnimationOpen(layoutRightMenu, 1.0f);
+                (mScaleValue + shadowAdjustScaleX), (mScaleValue + shadowAdjustScaleY) * 1.6f, TAG);
+        AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 1.0f, TAG);
+        AnimatorSet aplha_rightMenu = buildMenuAnimationOpen(layoutRightMenu, 1.0f, TAG);
+
         scaleDown_activity.addListener(animationListener);
         scaleDown_activity.playTogether(scaleDown_shadow, alpha_menu, aplha_rightMenu, animator, outerRadiusAnimator, translation);
         scaleDown_activity.setDuration(400);
         scaleDown_activity.setInterpolator(AnimationUtils.loadInterpolator(activity,
                 android.R.anim.decelerate_interpolator));
-       scaleDown_activity.start();
+        scaleDown_activity.start();
 
 
     }
 
 
-
-    public void  openDublicateMenu(int direction,int axis_x,int xOffSet,int scaleX,boolean openstatus) {
+    public void openDublicateMenu(int direction, int axis_x, int xOffSet, int scaleX, boolean openstatus) {
 /*            float  mScaleValueY=1.0f;
             multiPlyerValye=1.0f;
         if(xOffSet>0 &&  xOffSet<200){
@@ -672,7 +676,9 @@ public class ResideMenu extends FrameLayout {
             mScaleValueY=mScaleValue*1.4f;
             multiPlyerValye=1.6f;
         }*/
-        if(!openMenuStarted){
+
+        final String TAG = ResideMenu.TAG_DEFAULT + "|openDublicateMenu";
+        if (!openMenuStarted) {
             cvDashboard.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
             cvDashboard.setElevation(activity.getResources().getDimension(R.dimen._10sdp));
             cvInner.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
@@ -680,10 +686,10 @@ public class ResideMenu extends FrameLayout {
 
             imageViewShadow.setVisibility(VISIBLE);
             imageViewBackground.setVisibility(VISIBLE);
-            openMenuStarted=true;
+            openMenuStarted = true;
         }
 
-        PropertyValuesHolder translateX = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 600-axis_x, 0);
+        PropertyValuesHolder translateX = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 600 - axis_x, 0);
         ObjectAnimator translation = ObjectAnimator.ofPropertyValuesHolder(layoutRightMenu, translateX);
 
         layoutParams = (RelativeLayout.LayoutParams) cvInner.getLayoutParams();
@@ -705,20 +711,20 @@ public class ResideMenu extends FrameLayout {
             }
         });
 
-        setdublicateScaleDirection(direction,axis_x,xOffSet);
-        if(openstatus)
-       isOpened = true;
+        setdublicateScaleDirection(direction, axis_x, xOffSet);
+        if (openstatus)
+            isOpened = true;
 
-        AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity ,/*axis_x/scrW*/mScaleValue,mScaleValue /*mScaleValue*//*(axis_x/scrW)*/*multiPlyerValye/*1.6f*/);
+        AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity,/*axis_x/scrW*/mScaleValue, mScaleValue /*mScaleValue*//*(axis_x/scrW)*/ * multiPlyerValye/*1.6f*/, TAG);
         AnimatorSet scaleDown_shadow = buildScaleDownAnimation(imageViewShadow,
-                (mScaleValue/*(axis_x/scrW)*/ + shadowAdjustScaleX), (/*(axis_x/scrW)*/mScaleValue + shadowAdjustScaleY) *multiPlyerValye/*1.6f*/);
-        AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 1.0f);
-        AnimatorSet aplha_rightMenu = buildMenuAnimationOpen(layoutRightMenu, 1.0f);
+                (mScaleValue/*(axis_x/scrW)*/ + shadowAdjustScaleX), (/*(axis_x/scrW)*/mScaleValue + shadowAdjustScaleY) * multiPlyerValye/*1.6f*/, TAG);
+        AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 1.0f, TAG);
+        AnimatorSet aplha_rightMenu = buildMenuAnimationOpen(layoutRightMenu, 1.0f, TAG);
         //scaleDown_activity.addListener(animationListener);
         scaleDown_activity.addListener(animationDublicateListener);
 
         scaleDown_activity.playTogether(scaleDown_shadow, alpha_menu, aplha_rightMenu, animator, outerRadiusAnimator, translation);
-       // scaleDown_activity.setDuration(800);
+        // scaleDown_activity.setDuration(800);
         scaleDown_activity.setDuration(0);
         scaleDown_activity.setInterpolator(AnimationUtils.loadInterpolator(activity, android.R.anim.decelerate_interpolator));
         scaleDown_activity.start();
@@ -727,8 +733,8 @@ public class ResideMenu extends FrameLayout {
     }
 
 
-    public void closeDublicateMenu(int direction,int axis_x,int offSet,boolean menuOpenSatatus) {
-
+    public void closeDublicateMenu(int direction, int axis_x, int offSet, boolean menuOpenSatatus) {
+        final String TAG = ResideMenu.TAG_DEFAULT + "|closeDublicateMenu";
 
         cvDashboard.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvDashboard.setElevation(activity.getResources().getDimension(R.dimen._10sdp));
@@ -755,15 +761,15 @@ public class ResideMenu extends FrameLayout {
 
         animator.setDuration(0);
         outerRadiusAnimator.setDuration(0);
-        PropertyValuesHolder translateX = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0, 600-axis_x);
+        PropertyValuesHolder translateX = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0, 600 - axis_x);
         ObjectAnimator translation = ObjectAnimator.ofPropertyValuesHolder(layoutRightMenu, translateX);
 
-        if(menuOpenSatatus)
-        isOpened = false;
-        AnimatorSet scaleUp_activity = buildScaleUpAnimation(viewActivity, mScaleValue/*1.0f*//*axis_x/scrW*/, 1.0f);
-        AnimatorSet scaleUp_shadow = buildScaleUpAnimation(imageViewShadow, mScaleValue/*1.0f*//*axis_x/scrW*/, 1.0f);
-        AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 0.0f);
-        AnimatorSet alpha_right_menu = buildMenuAnimationOpen(layoutRightMenu, 0.0f);
+        if (menuOpenSatatus)
+            isOpened = false;
+        AnimatorSet scaleUp_activity = buildScaleUpAnimation(viewActivity, mScaleValue/*1.0f*//*axis_x/scrW*/, 1.0f, TAG);
+        AnimatorSet scaleUp_shadow = buildScaleUpAnimation(imageViewShadow, mScaleValue/*1.0f*//*axis_x/scrW*/, 1.0f, TAG);
+        AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 0.0f, TAG);
+        AnimatorSet alpha_right_menu = buildMenuAnimationOpen(layoutRightMenu, 0.0f, TAG);
 
         //scaleUp_activity.addListener(animationListener);
         scaleUp_activity.addListener(animationDublicateListener);
@@ -776,18 +782,14 @@ public class ResideMenu extends FrameLayout {
         scaleUp_activity.start();
 
 
-
     }
-
-
-
-
 
 
     /**
      * Close the menu;
      */
     public void closeMenu() {
+        final String TAG = ResideMenu.TAG_DEFAULT + "|closeMenu";
         cvDashboard.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvDashboard.setElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvInner.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
@@ -796,9 +798,10 @@ public class ResideMenu extends FrameLayout {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-
-                layoutParams.setMargins(0, 0, (int) valueAnimator.getAnimatedValue(), 0);
-                cvInner.setRadius((int) valueAnimator.getAnimatedValue());
+                int animatedValue = (int) valueAnimator.getAnimatedValue();
+                Log.d(TAG, "onAnimationUpdate: animator " + animatedValue);
+                layoutParams.setMargins(0, 0, animatedValue, 0);
+                cvInner.setRadius(animatedValue);
                 cvInner.requestLayout();
             }
         });
@@ -806,7 +809,9 @@ public class ResideMenu extends FrameLayout {
         outerRadiusAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                cvDashboard.setRadius((int) valueAnimator.getAnimatedValue());
+                int animatedValue = (int) valueAnimator.getAnimatedValue();
+                Log.d(TAG, "onAnimationUpdate: " + animatedValue);
+                cvDashboard.setRadius(animatedValue);
                 cvDashboard.requestLayout();
             }
         });
@@ -815,12 +820,17 @@ public class ResideMenu extends FrameLayout {
         outerRadiusAnimator.setDuration(250);
         PropertyValuesHolder translateX = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0, 600);
         ObjectAnimator translation = ObjectAnimator.ofPropertyValuesHolder(layoutRightMenu, translateX);
-
+        translation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Log.d(TAG, "onAnimationUpdate: translation " + animation.getAnimatedValue());
+            }
+        });
         isOpened = false;
-        AnimatorSet scaleUp_activity = buildScaleUpAnimation(viewActivity, 1.0f, 1.0f);
-        AnimatorSet scaleUp_shadow = buildScaleUpAnimation(imageViewShadow, 1.0f, 1.0f);
-        AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 0.0f);
-        AnimatorSet alpha_right_menu = buildMenuAnimationOpen(layoutRightMenu, 0.0f);
+        AnimatorSet scaleUp_activity = buildScaleUpAnimation(viewActivity, 1.0f, 1.0f, TAG);
+        AnimatorSet scaleUp_shadow = buildScaleUpAnimation(imageViewShadow, 1.0f, 1.0f, TAG);
+        AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 0.0f, TAG);
+        AnimatorSet alpha_right_menu = buildMenuAnimationOpen(layoutRightMenu, 0.0f, TAG);
 
         scaleUp_activity.addListener(animationListener);
         scaleUp_activity.playTogether(scaleUp_shadow, alpha_menu, alpha_right_menu, animator, outerRadiusAnimator, translation);
@@ -846,29 +856,27 @@ public class ResideMenu extends FrameLayout {
     }
 
 
-
-    public void setdublicateScaleDirection(int direction,int axis_x,int x_ofset) {
+    public void setdublicateScaleDirection(int direction, int axis_x, int x_ofset) {
 
         int screenWidth = getScreenWidth();
-        scrW=getScreenHeight();
+        scrW = getScreenHeight();
 
-        float pivotX=0.5f;
+        float pivotX = 0.5f;
         float pivotY = getScreenHeight() * 0.5f;
 
         if (direction == DIRECTION_LEFT) {
             scrollViewMenu = scrollViewLeftMenu;
-            pivotX = (screenWidth-axis_x) * -0.5f;
-            Log.d("ASD",pivotX+"     pivot x");
+            pivotX = (screenWidth - axis_x) * -0.5f;
+            Log.d("ASD", pivotX + "     pivot x");
         } else {
             scrollViewMenu = scrollViewRightMenu;
-           // pivotX = screenWidth * -0.0002f;
-           // pivotX = screenWidth * -0.5f;
-            if (x_ofset/2>=(screenWidth*-0.5f)){
-                pivotX=x_ofset/2;
+            // pivotX = screenWidth * -0.0002f;
+            // pivotX = screenWidth * -0.5f;
+            if (x_ofset / 2 >= (screenWidth * -0.5f)) {
+                pivotX = x_ofset / 2;
             }
-            Log.d("ASD",pivotX+"     pivot x");
-            Log.d("ASD",pivotY+"     pivot Y");
-
+            Log.d("ASD", pivotX + "     pivot x");
+            Log.d("ASD", pivotY + "     pivot Y");
 
 
         }
@@ -895,8 +903,8 @@ public class ResideMenu extends FrameLayout {
             pivotX = screenWidth * -0.5f;
 
         }
-        Log.e("PIVOTx",pivotX+"");
-        Log.e("PIVOTy",pivotY+"");
+        Log.e("PIVOTx", pivotX + "");
+        Log.e("PIVOTy", pivotY + "");
 
 
         ViewHelper.setPivotX(viewActivity, pivotX);
@@ -924,21 +932,43 @@ public class ResideMenu extends FrameLayout {
      * @param targetScaleY
      * @return
      */
-    private AnimatorSet buildScaleDownAnimation(View target, float targetScaleX, float targetScaleY) {
+    private AnimatorSet buildScaleDownAnimation(View target, float targetScaleX, float targetScaleY,
+                                                final String TAG) {
 
         AnimatorSet scaleDown = new AnimatorSet();
         AnimatorSet scaleXY = new AnimatorSet();
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(target, "scaleX", targetScaleX);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(target, "scaleY", targetScaleY);
         scaleXY.playTogether(
-                ObjectAnimator.ofFloat(target, "scaleX", targetScaleX),
-                ObjectAnimator.ofFloat(target, "scaleY", targetScaleY)
+                scaleX,
+                scaleY
         );
 
 
         if (mUse3D) {
             int angle = scaleDirection == DIRECTION_LEFT ? -ROTATE_Y_ANGLE : ROTATE_Y_ANGLE;
-            scaleDown.playTogether(scaleXY, ObjectAnimator.ofFloat(target, "rotationY", 0f, -(float) 8));
+            ObjectAnimator rotationY = ObjectAnimator.ofFloat(target, "rotationY", 0f, -(float) 8);
+            rotationY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    Log.d(TAG, "onAnimationUpdate:rotationY " + animation.getAnimatedValue());
+                }
+            });
+            scaleDown.playTogether(scaleXY, rotationY);
         }
 
+        scaleX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Log.d(TAG, "onAnimationUpdate: scaleX " + animation.getAnimatedValue());
+            }
+        });
+        scaleY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Log.d(TAG, "onAnimationUpdate: scaleY " + animation.getAnimatedValue());
+            }
+        });
 
         return scaleDown;
     }
@@ -949,9 +979,11 @@ public class ResideMenu extends FrameLayout {
      * @param target
      * @param targetScaleX
      * @param targetScaleY
+     * @param TAG
      * @return
      */
-    private AnimatorSet buildScaleUpAnimation(View target, float targetScaleX, float targetScaleY) {
+    private AnimatorSet buildScaleUpAnimation(View target, float targetScaleX, float targetScaleY,
+                                              final String TAG) {
 
 
         AnimatorSet scaleUp = new AnimatorSet();
@@ -969,15 +1001,20 @@ public class ResideMenu extends FrameLayout {
     }
 
 
-    private AnimatorSet buildMenuAnimationOpen(View target, float alpha) {
+    private AnimatorSet buildMenuAnimationOpen(View target, float alpha, final String TAG) {
 
         AnimatorSet alphaAnimation = new AnimatorSet();
-        alphaAnimation.play(
-                ObjectAnimator.ofFloat(target, "alpha", alpha)
-        );
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(target, "alpha", alpha);
+        alphaAnimation.play(objectAnimator);
         alphaAnimation.setInterpolator(AnimationUtils.loadInterpolator(activity,
                 android.R.anim.accelerate_decelerate_interpolator));
         alphaAnimation.setDuration(250);
+        objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Log.d(TAG, "onAnimationUpdate: alphaAnimation " + animation.getAnimatedValue());
+            }
+        });
         return alphaAnimation;
     }
 
@@ -1205,11 +1242,6 @@ public class ResideMenu extends FrameLayout {
          */
         void closeDublicateMenu();
     }
-
-
-
-
-
 
 
 }

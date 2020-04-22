@@ -2,6 +2,7 @@ package com.rkp.residemenuimpl;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -46,9 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private float lastActionDownX, lastActionDownY;
 
 
-
-
-    private ResideMenu.OnMenuDublicateListener menuDublicateListener =new ResideMenu.OnMenuDublicateListener() {
+    private ResideMenu.OnMenuDublicateListener menuDublicateListener = new ResideMenu.OnMenuDublicateListener() {
         @Override
         public void openDublicateMenu() {
 
@@ -63,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isOpened;
     private int screenWidth;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,10 +92,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         int xOffset = (int) (event.getX() - lastActionDownX);
                         int yOffset = (int) (event.getY() - lastActionDownY);
-                        Log.d(TAG, "ACTION_MOVE: offsetX " + xOffset );
-                       resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1,xOffset,x1/screenWidth,false);
-                     //  resideMenu.closeDublicateMenu(ResideMenu.DIRECTION_RIGHT,x1,xOffset,false);
-                       // resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
+                        Log.d(TAG, "ACTION_MOVE: offsetX " + xOffset);
+                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1, xOffset, x1 / screenWidth, false);
+                        //  resideMenu.closeDublicateMenu(ResideMenu.DIRECTION_RIGHT,x1,xOffset,false);
+                        // resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
                        /* if(x1>0){
                             percentage=(x1/screenWidth)*100;
                             Log.d(TAG,percentage+"   per");
@@ -112,18 +112,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         int xOfffset = (int) (event.getX() - lastActionDownX);
                         Log.d(TAG, "ACTION_UP: " + x1 + " ,  " + y1);
 
-                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1,xOfffset,x1/screenWidth,true);
+                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1, xOfffset, x1 / screenWidth, true);
 
 
                         // Use dx and dy to determine the direction of the move
                         if (Math.abs(dx) > Math.abs(dy)) {
                             if (dx > 0) {
                                 direction = "right";
-                               // resideMenu.closeDublicateMenu(ResideMenu.DIRECTION_RIGHT,x1,xOfffset,true);
+                                // resideMenu.closeDublicateMenu(ResideMenu.DIRECTION_RIGHT,x1,xOfffset,true);
 
                             } else {
                                 direction = "left";
-                              //  resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1,xOfffset,x1/screenWidth,true);
+                                //  resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1,xOfffset,x1/screenWidth,true);
 
                             }
 
@@ -150,9 +150,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
-         screenWidth = displayMetrics.widthPixels;
+        screenWidth = displayMetrics.widthPixels;
 
-        Log.d(TAG,screenWidth+"    screen");
+        Log.d(TAG, screenWidth + "    screen");
 
 
         mContext = MainActivity.this;
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_icon:
-                //resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT);
+                resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
                 break;
 
         }
