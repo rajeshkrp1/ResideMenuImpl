@@ -34,7 +34,7 @@ import java.util.List;
  * Time: 下午10:44
  * Mail: specialcyci@gmail.com
  */
-public class ResideMenu extends FrameLayout {
+public class CopyResideMenu extends FrameLayout {
 
     private static final String TAG_DEFAULT = "ResideMenu";
     public static final int DIRECTION_LEFT = 0;
@@ -85,9 +85,7 @@ public class ResideMenu extends FrameLayout {
     // Valid scale factor is between 0.0f and 1.0f.
     //private float mScaleValue = 0.41f;
     private float mScaleValue = 0.41f;
-    private float mPrevipousScaleValue = 0.41f;
-   // private float multiPlyerValye = 1.6f;
-    private float multiPlyerValye =1.0f;
+    private float multiPlyerValye = 1.6f;
     private boolean mUse3D;
     private float lastActionDownX, lastActionDownY;
     private RelativeLayout.LayoutParams layoutParams;
@@ -199,7 +197,7 @@ public class ResideMenu extends FrameLayout {
         public void onClick(View view) {
             if (isOpened()) {
                 closeMenu();
-                closeDublicateMenu(ResideMenu.DIRECTION_RIGHT, 00, 00, true);
+                closeDublicateMenu(CopyResideMenu.DIRECTION_RIGHT, 00, 00, true);
 
             }
             closeMenu();
@@ -207,7 +205,7 @@ public class ResideMenu extends FrameLayout {
     };
     private boolean openMenuStarted;
 
-    public ResideMenu(Context context, CardView cvDashboard, CardView cvInner) {
+    public CopyResideMenu(Context context, CardView cvDashboard, CardView cvInner) {
         super(context);
         this.cvInner = cvInner;
         this.cvDashboard = cvDashboard;
@@ -234,8 +232,8 @@ public class ResideMenu extends FrameLayout {
      * layouts, but if you use custom menu then do not call addMenuItem because
      * it will not be able to find default views
      */
-    public ResideMenu(Context context, int customLeftMenuId,
-                      int customRightMenuId) {
+    public CopyResideMenu(Context context, int customLeftMenuId,
+                          int customRightMenuId) {
         super(context);
         initViews(context, customLeftMenuId, customRightMenuId);
     }
@@ -611,7 +609,7 @@ public class ResideMenu extends FrameLayout {
      * Show the menu;
      */
     public void openMenu(int direction) {
-        final String TAG = ResideMenu.TAG_DEFAULT + "|openMenu";
+        final String TAG = CopyResideMenu.TAG_DEFAULT + "|openMenu";
         cvDashboard.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvDashboard.setElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvInner.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
@@ -671,51 +669,26 @@ public class ResideMenu extends FrameLayout {
     }
 
 
-    public void openDublicateMenu(int direction, float /*updatedMovingValue*/mScaleValue, int xOffSet,int lastActionDownX, int scaleX, boolean openstatus,boolean touchEventStateUp,float mScaleValueY) {
-        final String TAG = ResideMenu.TAG_DEFAULT + "|openDMenu";
+    public void openDublicateMenu(int direction, float updatedMovingValue, int xOffSet,int lastActionDownX, int scaleX, boolean openstatus) {
+        final String TAG = CopyResideMenu.TAG_DEFAULT + "|openDMenu";
 
-
+        float  mScaleValueY=1.0f;
             int xofset=Math.abs(xOffSet);
 
-       // Log.d(TAG,"updatedMovingValue : "+updatedMovingValue);
+            Log.d(TAG,"updatedMovingValue : "+updatedMovingValue);
+            float d1=1000-updatedMovingValue;
+        Log.d(TAG,"updatedMovingValue 1000-: "+d1);
+      //  Double d = new Double(((0.45-/*previousRatationValue*/1)/(1000)*(updatedMovingValue)/*+0.45*/)+previousRatationValue);
+       // Double d = new Double(((0.45-/*previousRatationValue*/1)/(1000)*(updatedMovingValue)/*+0.45*/)+1);
 
-            if(!touchEventStateUp){
-
-                //  Double d = new Double(((0.45-/*previousRatationValue*/1)/(1000)*(updatedMovingValue)/*+0.45*/)+previousRatationValue);
-                // Double d = new Double(((0.45-/*previousRatationValue*/1)/(1000)*(updatedMovingValue)/*+0.45*/)+1);
-
-                //Double d = new Double(((0.45-/*previousRatationValue*/.7)/(1080)*(updatedMovingValue))+.7);
-                // Double d = new Double(((0.45-previousRatationValue)/(1000)*(updatedMovingValue)+0.45));
-                //previousRatationValue=d.floatValue();
-                //mScaleValue=d.floatValue();
-                Log.d(TAG,"mScaleValue : "+mScaleValue);
-                //mPrevipousScaleValue=mScaleValue;
-               // Log.d(TAG,"mPrevipousScaleValue : "+mPrevipousScaleValue);
-
-            }else {
-
-                if(xOffSet<0){
-
-                 //   Double d = new Double(((0.45-/*previousRatationValue*/.7)/(1080)*(updatedMovingValue))+previousRatationValue);
-                    // Double d = new Double(((0.45-previousRatationValue)/(1000)*(updatedMovingValue)+0.45));
-                  //  previousRatationValue=d.floatValue();
-                  //  mScaleValue=d.floatValue();
-                   // mPrevipousScaleValue=mScaleValue;
-
-                }else {
-                   // Double dprivious = new Double(((0.45-/*previousRatationValue*/.7)/(1080)*(updatedMovingValue))+.7+mPrevipousScaleValue);
-                  //  mScaleValue=dprivious.floatValue();
-
-                }
-
-
-                Log.d(TAG,"After up mScaleValue : "+mScaleValue);
-
-            }
+        Double d = new Double(((0.45-/*previousRatationValue*/1)/(1000)*(updatedMovingValue))+1);
+       // Double d = new Double(((0.45-previousRatationValue)/(1000)*(updatedMovingValue)+0.45));
+        previousRatationValue=d.floatValue();
+        Log.d("previousRatationValue :",previousRatationValue+"");
 
 
 
-
+        mScaleValue=d.floatValue();
 
           /*  previousOffset=xOffSet;
             Double d=1+((0.45-1)/1000)*previousOffset;
@@ -731,6 +704,33 @@ public class ResideMenu extends FrameLayout {
         mScaleValue= d.floatValue()- previousRatationValue;*/
 
        // mScaleValue=d.floatValue();
+/*
+            //multiPlyerValye=1.0f;
+        if(xofset>0 &&  xofset<100){
+            mScaleValue=1.0f;
+            multiPlyerValye=1.2f;
+        }else if(xofset>100 && xofset<200){
+            mScaleValue=0.9542f;
+            //multiPlyerValye=1.4f;
+        }else if(xofset>200 && xofset<300){
+            mScaleValue=0.7932f;
+           // multiPlyerValye=1.5f;
+        }else if(xofset>300 && xofset<400){
+            mScaleValue=0.565f;
+        }else if(xofset>400 && xofset<500){
+            mScaleValue=0.52631f;
+        }else if(xofset>600 && xofset<700){
+            mScaleValue=0.49625498f;
+        }else if(xofset>700 && xofset<800){
+            mScaleValue=0.48369092f;
+        }else if(xofset>800 && xofset<900){
+            mScaleValue=0.46452343f;
+        }else {
+            mScaleValue = 00.45f;
+           // multiPlyerValye=1.6f;
+        }
+
+        float f1=(float) (1-0.55)/1000;*/
 
 
         if (!openMenuStarted) {
@@ -775,19 +775,19 @@ public class ResideMenu extends FrameLayout {
             }
         });
 
-        setdublicateScaleDirection(direction, /*updatedMovingValue*/mScaleValue, xOffSet,TAG);
+        setdublicateScaleDirection(direction, updatedMovingValue, xOffSet,TAG);
        // setScaleDirectionByRawX(updatedMovingValue);
        /* if (openstatus)
             isOpened = true;*/
-       isOpened=true;
+      // isOpened=true;
 
         Log.d(TAG,"beforegettingScaleX: mScaleValue "+mScaleValue+"");
         Log.d(TAG,"beforegettingScaleX: imageViewShadow "+imageViewShadow+"");
         Log.d(TAG,"beforegettingScaleX: shadowAdjustScaleX "+shadowAdjustScaleX+"");
 
-        AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity,/*axis_x/scrW*/mScaleValue, /*mScaleValue*/mScaleValueY*  multiPlyerValye/*1.6f*/, TAG);
+        AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity,/*axis_x/scrW*/mScaleValue, mScaleValue /*mScaleValue*//*(axis_x/scrW)*/ * multiPlyerValye/*1.6f*/, TAG);
         AnimatorSet scaleDown_shadow = buildScaleDownAnimation(imageViewShadow,
-                (mScaleValue/*(axis_x/scrW)*/ + shadowAdjustScaleX), (/*mScaleValue */mScaleValueY+ shadowAdjustScaleY) * multiPlyerValye/*1.6f*/, TAG);
+                (mScaleValue/*(axis_x/scrW)*/ + shadowAdjustScaleX), (/*(axis_x/scrW)*/mScaleValue + shadowAdjustScaleY) * multiPlyerValye/*1.6f*/, TAG);
         AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 1.0f, TAG);
         AnimatorSet aplha_rightMenu = buildMenuAnimationOpen(layoutRightMenu, 1.0f, TAG);
         //scaleDown_activity.addListener(animationListener);
@@ -805,7 +805,7 @@ public class ResideMenu extends FrameLayout {
 
 
     public void closeDublicateMenu(int direction, int axis_x, int offSet, boolean menuOpenSatatus) {
-        final String TAG = ResideMenu.TAG_DEFAULT + "|closeDublicateMenu";
+        final String TAG = CopyResideMenu.TAG_DEFAULT + "|closeDublicateMenu";
 
          cvDashboard.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvDashboard.setElevation(activity.getResources().getDimension(R.dimen._10sdp));
@@ -843,7 +843,7 @@ public class ResideMenu extends FrameLayout {
         AnimatorSet alpha_right_menu = buildMenuAnimationOpen(layoutRightMenu, 0.0f, TAG);
 
         //scaleUp_activity.addListener(animationListener);
-        //scaleUp_activity.addListener(animationDublicateListener);
+        scaleUp_activity.addListener(animationDublicateListener);
 
         scaleUp_activity.playTogether(scaleUp_shadow, alpha_menu, alpha_right_menu, animator, outerRadiusAnimator, translation);
         scaleUp_activity.setInterpolator(AnimationUtils.loadInterpolator(activity,
@@ -859,7 +859,7 @@ public class ResideMenu extends FrameLayout {
      * Close the menu;
      */
     public void closeMenu() {
-        final String TAG = ResideMenu.TAG_DEFAULT + "|closeMenu";
+        final String TAG = CopyResideMenu.TAG_DEFAULT + "|closeMenu";
         cvDashboard.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvDashboard.setElevation(activity.getResources().getDimension(R.dimen._10sdp));
         cvInner.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
@@ -932,9 +932,7 @@ public class ResideMenu extends FrameLayout {
         int varoffset;
 
         float pivotX = 0.5f;
-       // float pivotY = getScreenHeight() * 0.5f;
-       // float pivotY = getScreenHeight() * 0.5f;
-        float pivotY = getScreenHeight() *0.5f;
+        float pivotY = getScreenHeight() * 0.5f;
 
         if (direction == DIRECTION_LEFT) {
            // scrollViewMenu = scrollViewLeftMenu;
@@ -947,7 +945,6 @@ public class ResideMenu extends FrameLayout {
         } else {
             scrollViewMenu = scrollViewRightMenu;
              pivotX = screenWidth * -0.5f;
-
             // pivotX = screenWidth * -(80/108);
            /* if(!isFirstTimeOffset)
             {
@@ -959,12 +956,13 @@ public class ResideMenu extends FrameLayout {
                 varoffset=previousOffset;
             }else varoffset=x_ofset;
 */
-/*
-            if (x_ofset / 2 >= (screenWidth * -0.5f)) {
+
+            /*if (x_ofset / 2 >= (screenWidth * -0.5f)) {
                 pivotX = x_ofset / 2;
-            }*/
+            }
             
             Log.e(TAG,"setDublicateDirectionelseRight : pivotX "+pivotX);
+*/
            float  newX= (float) (screenWidth-((screenWidth*0.41)/100))*0.5f;
             Log.d("ASD",newX+"     new x");
             Log.d("ASD", pivotY + "     pivot Y");

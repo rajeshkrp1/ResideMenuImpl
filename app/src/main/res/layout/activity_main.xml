@@ -8,19 +8,22 @@
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:padding="@dimen/_50sdp"
     app:cardElevation="0dp">
 
     <RelativeLayout
         android:id="@+id/rl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+
         tools:context="com.aertrip.activities.MainActivity">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_inner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+
             app:cardElevation="0dp">
 
 
@@ -29,7 +32,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+
                 android:visibility="visible"
+
+                android:background="@color/colorPrimary"
+
 
                 >
 
