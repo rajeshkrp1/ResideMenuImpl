@@ -5,6 +5,8 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -19,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.cardview.widget.CardView;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.TouchDisableView;
 
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int DIRECTION_RIGHT = 1;
     private static final String TAG = "MainActivity";
     CardView cvInner, cvDashboard;
-    AppCompatImageView iv_icon;
+    FrameLayout fl_image;
     int x1, x2, y1, y2, dx, dy;
     Activity activity;
     float startX, deltaX, previousDeltaX = -1080, initialDeltaX;
@@ -53,17 +56,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isFingureUp;
     private boolean moreThanOneSwipe, rightSwipeMoreThanOne;
     private DisplayMetrics displayMetrics = new DisplayMetrics();
+    private AppBarLayout appBar;
+    private  float mUuterRadiusValue,innerRadius;
 
 
     private ResideMenu.OnMenuDublicateListener menuDublicateListener = new ResideMenu.OnMenuDublicateListener() {
         @Override
         public void openDublicateMenu() {
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (appBar != null) {
+                    appBar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                }
+            }
         }
 
         @Override
         public void closeDublicateMenu() {
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (appBar != null) {
+                    appBar.setSystemUiVisibility(0);
+                }
+            }
         }
     };
 
@@ -146,10 +160,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d(TAG, "mScaleValue : " + mScaleValue);
                             mPrevipousScaleValue = mScaleValue;
                             Log.d(TAG, "ACTION_MOVE: mPrevipousScaleValue : " + mPrevipousScaleValue);
+                            
+                            // for mUuterRadiusValue value
+                            Double dmUuterRadiusValue = new Double(((0 -/*previousRatationValue*/35) / (getScreenHeight()) * (moving)) );
+                            mUuterRadiusValue=dmUuterRadiusValue.floatValue();
+                            
+                            
 
 
                         } else {
-
                             if (xOffset < 0) {
                                 // for right to left
                                 rotationDirection = 1;
@@ -163,9 +182,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 // for scaleY
                                 Double y1 = new Double((0.76 - 1) / getScreenHeight()) * moving + mScaleValueYprevious;
                                 mScaleValueY = y1.floatValue();
-                                if(mScaleValueY<0.55){
-                                    mScaleValueY=0.55f;
+                                if(mScaleValueY<0.6){
+                                    mScaleValueY=0.6f;
                                 }
+
 
 
                                 Log.e(TAG, "ACTION_MOVE: mScaleValueY" + mScaleValueY);
@@ -196,9 +216,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
 
 
-                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*//* moving*/mScaleValue, xOffset, (int) lastActionDownX, x1 / screenWidth, false, isFingureUp, mScaleValueY);
-                        //  resideMenu.closeDublicateMenu(ResideMenu.DIRECTION_RIGHT,x1,xOffset,false);
-                        // resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
+                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*//* moving*/mScaleValue, xOffset, (int) lastActionDownX, x1 / screenWidth, false, isFingureUp, mScaleValueY,mUuterRadiusValue);
+
 
 
                         break;
@@ -218,6 +237,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d(TAG, "ACTION_UP:  isFingureUp  " + isFingureUp);
                         float deltaX = -(event.getRawX() - startX);
                         if (rotationDirection == 1) {
+
+                            // this block for right to left swipe
+
                             Double d = new Double(((0.45 -/*previousRatationValue*/.7) / (getScreenWidth()) * (deltaX)) + previousRatationValue);
                             if (moreThanOneSwipe) {
                                 previousRatationValue = d.floatValue();
@@ -230,13 +252,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Double y1 = new Double((0.76 - 1) / getScreenHeight()) * deltaX + mScaleValueYprevious;
 
                             mScaleValueYprevious = y1.floatValue();
-                            if (mScaleValueYprevious < 0.55) {
-                                mScaleValueYprevious = 0.55f;
+                            if (mScaleValueYprevious < 0.6) {
+                                mScaleValueYprevious = 0.6f;
                             }
 
                             moreThanOneSwipe = false;
                             Log.d(TAG, "ACTION_UP previousRatationValue :" + previousRatationValue);
                         } else {
+                            /*
+                            * this block when left to right swipe
+                            * */
 
                             // for scaleX
                             Double dprivious = new Double(((0.45 - .7) / (getScreenWidth()) * (deltaX)) + previousRatationValue);
@@ -248,6 +273,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }*/
                             }
                             rightSwipeMoreThanOne = false;
+
 
                             // for ScaleY
                             Double y1 = new Double((0.76 - 1) / getScreenHeight()) * deltaX + mScaleValueYprevious;
@@ -286,16 +312,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mContext = MainActivity.this;
         cvInner = findViewById(R.id.cv_inner);
         cvDashboard = findViewById(R.id.cv_dashboard);
-        iv_icon = findViewById(R.id.iv_icon);
-
-        iv_icon.setOnClickListener(this);
+        fl_image = findViewById(R.id.fl_image_home);
+        appBar=findViewById(R.id.app_bar);
+        fl_image.setOnClickListener(this);
 
         layoutParams = (RelativeLayout.LayoutParams) cvInner.getLayoutParams();
         fragParams = (FrameLayout.LayoutParams) cvDashboard.getLayoutParams();
         resideMenu = new ResideMenu(this, cvDashboard, cvInner);
         resideMenu = new ResideMenu(this, cvDashboard, cvInner);
+
         resideMenu.attachToActivity(this);
+
+        if (Build.VERSION.SDK_INT < 16) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+        else {
+            View decorView = getWindow().getDecorView();
+            // Show Status Bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        );
+
+
+
+
     }
+
+
 
     @Override
     protected void onResume() {
@@ -317,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_icon:
+            case R.id.fl_image_home:
                 resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
                 break;
 
@@ -329,57 +377,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean dispatchTouchEvent(MotionEvent ev) {
         return resideMenu.dispatchTouchEvent(ev);
     }*/
-
-
-    private void changeVariableValue() {
-        if (!first) {
-            mScaleValue = 1.0f;
-            // resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1, 00,(int)lastActionDownX, mScaleValue, true);
-            first = true;
-        } else if (!second) {
-            mScaleValue = 0.9542f;
-            // resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1, 00,(int)lastActionDownX, mScaleValue, true);
-
-            second = true;
-        } else if (!third) {
-            mScaleValue = 0.7932f;
-            //resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1, 00,(int)lastActionDownX, mScaleValue, true);
-
-            third = true;
-        } else if (!fourth) {
-            mScaleValue = 0.565f;
-            //resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1, 00,(int)lastActionDownX, mScaleValue, true);
-
-            fourth = true;
-        } else if (!fifth) {
-            mScaleValue = 0.52631f;
-            // resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1, 00,(int)lastActionDownX, mScaleValue, true);
-
-            fifth = true;
-        } else if (!six) {
-            mScaleValue = 0.49625498f;
-            //resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1, 00,(int)lastActionDownX, mScaleValue, true);
-
-            six = true;
-        } else if (!seven) {
-            mScaleValue = 0.48369092f;
-            /// resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1, 00,(int)lastActionDownX, mScaleValue, true);
-
-            seven = true;
-        } else if (!eight) {
-            mScaleValue = 0.46452343f;
-            // resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1, 00,(int)lastActionDownX, mScaleValue, true);
-
-            eight = true;
-        } else {
-            mScaleValue = 0.41f;
-            // resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, x1, 00,(int)lastActionDownX, mScaleValue, true);
-
-        }
-
-
-    }
-
 
     public int getScreenHeight() {
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
