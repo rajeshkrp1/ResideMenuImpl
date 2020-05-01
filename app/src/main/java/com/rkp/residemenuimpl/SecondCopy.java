@@ -28,7 +28,7 @@ public class SecondCopy extends AppCompatActivity implements View.OnClickListene
     public static final int DIRECTION_RIGHT = 1;
     private static final String TAG = "MainActivity";
     CardView cvInner, cvDashboard;
-    AppCompatImageView iv_icon;
+    FrameLayout fl_image;
     int x1, x2, y1, y2, dx, dy;
     float startX,deltaX,previousDeltaX=-1080,initialDeltaX;
     String direction;
@@ -125,7 +125,7 @@ public class SecondCopy extends AppCompatActivity implements View.OnClickListene
                         Log.d(TAG, "ACTION_MOVE: lastActionDownX " + lastActionDownX);
                         Log.d(TAG, "ACTION_MOVE: event.getX() " + event.getRawX());
 
-                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*/moving, xOffset, (int)lastActionDownX,x1 / screenWidth, false,false,0.0f);
+                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*/moving, xOffset, (int)lastActionDownX,x1 / screenWidth, false,false,0.0f,0.0f);
                         //  resideMenu.closeDublicateMenu(ResideMenu.DIRECTION_RIGHT,x1,xOffset,false);
                         // resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
                        /* if(x1>0){
@@ -146,7 +146,7 @@ public class SecondCopy extends AppCompatActivity implements View.OnClickListene
                         Log.d(TAG, "ACTION_UP:  event.getX()  " +  event.getX());
                         Log.d(TAG, "ACTION_UP:  lastActionDownX  " +  lastActionDownX);
                         //resideMenu.setScaleDirectionByRawX(event.getRawX());
-                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, deltaX, xOfffset, (int)lastActionDownX,x1 / screenWidth, false,false,0.0f);
+                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, deltaX, xOfffset, (int)lastActionDownX,x1 / screenWidth, false,false,0.0f,0.0f);
 
 
 
@@ -196,9 +196,9 @@ public class SecondCopy extends AppCompatActivity implements View.OnClickListene
         mContext = SecondCopy.this;
         cvInner = findViewById(R.id.cv_inner);
         cvDashboard = findViewById(R.id.cv_dashboard);
-        iv_icon = findViewById(R.id.iv_icon);
+        fl_image = findViewById(R.id.fl_image);
 
-        iv_icon.setOnClickListener(this);
+        fl_image.setOnClickListener(this);
 
         layoutParams = (RelativeLayout.LayoutParams) cvInner.getLayoutParams();
         fragParams = (FrameLayout.LayoutParams) cvDashboard.getLayoutParams();
@@ -227,7 +227,7 @@ public class SecondCopy extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_icon:
+            case R.id.fl_image:
                 resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
                 break;
 
