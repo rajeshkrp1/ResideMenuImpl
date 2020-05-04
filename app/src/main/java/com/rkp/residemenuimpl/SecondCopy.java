@@ -125,7 +125,7 @@ public class SecondCopy extends AppCompatActivity implements View.OnClickListene
                         Log.d(TAG, "ACTION_MOVE: lastActionDownX " + lastActionDownX);
                         Log.d(TAG, "ACTION_MOVE: event.getX() " + event.getRawX());
 
-                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*/moving, xOffset, (int)lastActionDownX,x1 / screenWidth, false,false,0.0f,0.0f);
+                       // resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*/moving, xOffset, (int)lastActionDownX,x1 / screenWidth, false,false,0.0f,0.0f,00);
                         //  resideMenu.closeDublicateMenu(ResideMenu.DIRECTION_RIGHT,x1,xOffset,false);
                         // resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
                        /* if(x1>0){
@@ -146,7 +146,7 @@ public class SecondCopy extends AppCompatActivity implements View.OnClickListene
                         Log.d(TAG, "ACTION_UP:  event.getX()  " +  event.getX());
                         Log.d(TAG, "ACTION_UP:  lastActionDownX  " +  lastActionDownX);
                         //resideMenu.setScaleDirectionByRawX(event.getRawX());
-                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, deltaX, xOfffset, (int)lastActionDownX,x1 / screenWidth, false,false,0.0f,0.0f);
+                      //  resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, deltaX, xOfffset, (int)lastActionDownX,x1 / screenWidth, false,false,0.0f,0.0f,00);
 
 
 

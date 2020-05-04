@@ -561,7 +561,7 @@ public class ResideMenu extends FrameLayout {
     }
 
 
-    public void openDublicateMenu(int direction, float mScaleValue, int xOffSet, int lastActionDownX, int scaleX, boolean openstatus, boolean touchEventStateUp, float mScaleValueY, float outerRadiusValue) {
+    public void openDublicateMenu(int direction, float mScaleValue, int xOffSet, int lastActionDownX, int scaleX, boolean openstatus, boolean touchEventStateUp, float mScaleValueY, float outerRadiusValue,float transitionValue, float rotationY) {
         final String TAG = ResideMenu.TAG_DEFAULT + "|openDMenu";
 
         if (!openMenuStarted) {
@@ -609,11 +609,13 @@ public class ResideMenu extends FrameLayout {
 
         setdublicateScaleDirection(direction, mScaleValue, xOffSet, TAG);
 
-        Log.d(TAG, "beforegettingScaleX: mScaleValue " + mScaleValue + "");
-        Log.d(TAG, "beforegettingScaleX: imageViewShadow " + imageViewShadow + "");
-        Log.d(TAG, "beforegettingScaleX: shadowAdjustScaleX " + shadowAdjustScaleX + "");
-        Log.d(TAG, "beforegettingScaleX: shadowAdjustScaleX " + shadowAdjustScaleX + "");
-        Log.d(TAG, "beforegettingmScaleValueY: mScaleValueY " + mScaleValueY + "");
+        Log.d(TAG, "beforegetting: mScaleValue " + mScaleValue + "");
+        Log.d(TAG, "beforegetting: imageViewShadow " + imageViewShadow + "");
+        Log.d(TAG, "beforegetting: shadowAdjustScaleX " + shadowAdjustScaleX + "");
+        Log.d(TAG, "beforegetting: shadowAdjustScaleX " + shadowAdjustScaleX + "");
+        Log.d(TAG, "beforegetting: mScaleValueY " + mScaleValueY + "");
+        Log.d(TAG, "beforegetting: transitionValue " + transitionValue + "");
+        Log.d(TAG, "beforegetting: rotationY " + rotationY + "");
 
 
         if (touchEventStateUp) {
@@ -621,6 +623,7 @@ public class ResideMenu extends FrameLayout {
                 mScaleValue = 0.42f;
                 mScaleValueY = 0.6f;
                 isOpened = true;
+                scrollViewMenu.setTranslationX(transitionValue);
                 AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity, mScaleValue, mScaleValueY * multiPlyerValye, TAG);
                 AnimatorSet scaleDown_shadow = buildScaleDownAnimation(imageViewShadow,
                         (mScaleValue + shadowAdjustScaleX), (mScaleValueY + shadowAdjustScaleY) * multiPlyerValye/*1.6f*/, TAG);
@@ -635,6 +638,7 @@ public class ResideMenu extends FrameLayout {
             } else {
                 mScaleValue = 1.0f;
                 mScaleValueY = 1.0f;
+                scrollViewMenu.setTranslationX(transitionValue);
                 ValueAnimator animatorClose = ValueAnimator.ofInt((int) getResources().getDimension(R.dimen._10sdp), 0);
                 animatorClose.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
@@ -674,11 +678,16 @@ public class ResideMenu extends FrameLayout {
         } else {
 
             if (mScaleValue < .68 && mScaleValueY < .73) {
-
                 isOpened = true;
+                showScrollViewMenu(scrollViewMenu);
+                scrollViewMenu.setTranslationX(transitionValue);
 
-                layoutRightMenu.setTranslationX(500);
+                if(mUse3D){
+                    viewActivity.setRotationY(rotationY);
+                    viewActivity.setScaleX(mScaleValue);
+                    viewActivity.setScaleY(mScaleValueY);
 
+                }
 
                 AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity, mScaleValue, mScaleValueY * multiPlyerValye/*1.6f*/, TAG);
                 AnimatorSet scaleDown_shadow = buildScaleDownAnimation(imageViewShadow,

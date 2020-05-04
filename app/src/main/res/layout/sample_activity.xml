@@ -10,26 +10,15 @@
     android:focusableInTouchMode="true"
     app:cardElevation="0dp">
 
-
-   <Button
-       android:id="@+id/btn1"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       app:layout_constraintTop_toTopOf="parent"
-       app:layout_constraintStart_toStartOf="parent"
-       android:text="sdsddsd"
-       android:visibility="gone"
-
-       />
-
-    <Button
-        android:id="@+id/btn2"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="second"
-        app:layout_constraintLeft_toRightOf="@id/btn1"
-        />
+        android:id="@+id/imageView"
+        android:paddingBottom="16dp"
+        android:src="@drawable/ic_launcher"
+        app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    />
 
 
 

@@ -58,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DisplayMetrics displayMetrics = new DisplayMetrics();
     private AppBarLayout appBar;
     private  float mUuterRadiusValue,innerRadius;
-    private int transitionValue;
+    private float transitionValue;
+    float angle;
 
 
     private ResideMenu.OnMenuDublicateListener menuDublicateListener = new ResideMenu.OnMenuDublicateListener() {
@@ -131,6 +132,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     case (MotionEvent.ACTION_MOVE):
                         Log.d(TAG, "ACTION_MOVE: " + x1 + " ,  " + y1);
+                        Log.d(TAG, "ACTION_MOVE: getScreenWidth" + getScreenWidth());
+                        Log.d(TAG, "ACTION_MOVE: getScreenHeight" + getScreenHeight());
 
                         // int xOffset = (int) (event.getX() - lastActionDownX);
                         int xOffset = (int) (event.getRawX() - lastActionDownX);
@@ -150,18 +153,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d(TAG, "ACTION_MOVE: isFingureUp " + isFingureUp);
 
                         if(isOpened){
-//
-//                           // Double dprivious = new Double(((0.45 -/*previousRatationValue*/.7) / (getScreenWidth()) * (moving)) + previousRatationValue);
-//                            Double dprivious = new Double(((0.45 -0.7) / (getScreenWidth()) * (moving)) + previousRatationValue);
-//                                    mScaleValue = dprivious.floatValue();
-//
-//                            // for scaleY
-//                            Double y1 = new Double((0.76 - 1) / getScreenHeight()) * moving + mScaleValueYprevious;
-//                            mScaleValueY = y1.floatValue();
-//
-                            // new implementation
-                            // for x Axis
-                           // Double d = new Double(((0.45 -.7) / (getScreenWidth()) * (moving)) + .7);
 
                         if(xOffset>0){
                             Double d = new Double(((0.45 -.7/*1-0.45*/) / (getScreenWidth()) * (moving)) + previousRatationValue);
@@ -178,19 +169,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mScaleValueY=0.6f;
                             }
 
+                            // for translation
+                            transitionValue  = (int)2400*mScaleValue-1080;
+
+                           // float angle= 0-10/getScreenWidth()*moving;
+
+
                         }
 
                         }else {
-
+                            /*
+                            * this section excute when door is open
+                            * */
 
                             //for scaleX
-                            Double d = new Double(((0.45 -/*previousRatationValue*/.7) / (getScreenWidth()) * (moving)) + .7);
-
+                            Double d = ((0.45 - 0.7) / (getScreenWidth()) * (moving)) + .7;
                             // Double d = new Double(((0.45-previousRatationValue)/(1000)*(updatedMovingValue)+0.45));
                             previousRatationValue = d.floatValue();
                             mScaleValue = d.floatValue();
+
                             // for scaleY
-                            Double y1 = new Double((0.76 - 1) / getScreenHeight()) * moving + 0.7;
+                            Double y1 = (0.76 - 1) / getScreenHeight() * moving + 0.7;
                             mScaleValueY = y1.floatValue();
                             mScaleValueYprevious = mScaleValueY;
                             Log.d(TAG, "mScaleValue : " + mScaleValue);
@@ -198,15 +197,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d(TAG, "ACTION_MOVE: mPrevipousScaleValue : " + mPrevipousScaleValue);
 
                             // for mUuterRadiusValue value
-                            Double dmUuterRadiusValue = new Double(((35 -.45) / (getScreenWidth()) * (moving))+.45 );
+                            Double dmUuterRadiusValue = ((35 - 0.45) / (getScreenWidth()) * (moving)) + .45;
                             mUuterRadiusValue=dmUuterRadiusValue.floatValue();
                             Log.d(TAG, "ACTION_MOVE: mUuterRadiusValue : " + mUuterRadiusValue);
 
                             // for transition
-                            transitionValue  = (int) (((600-0) / (getScreenWidth()) * (moving)) + 600);
+                          //  transitionValue  = (int) (((600-0) / (/*getScreenWidth()/2*/542) * (moving)));
+                           // transitionValue  = (int) (((600) / (getScreenWidth()) * (moving))+1);
+                            transitionValue  = (int)2400*mScaleValue-1080;
                            // transitionValue=transition.intValue();
-                            Log.d(TAG, "ACTION_MOVE: transitionValue : " + mUuterRadiusValue);
+                            Log.d(TAG, "ACTION_MOVE: transitionValue : " + transitionValue);
+                            Log.d(TAG, "ACTION_MOVE: moving : " + moving);
 
+                            // for angle
+                             angle= ((0-10)/(float)getScreenWidth())*moving;
+                            Log.d(TAG, "ACTION_MOVE: angle : " + angle);
 
 
                         }
@@ -289,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }*/
 
 
-                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*//* moving*/mScaleValue, xOffset, (int) lastActionDownX, x1 / screenWidth, false, isFingureUp, mScaleValueY,mUuterRadiusValue);
+                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*//* moving*/mScaleValue, xOffset, (int) lastActionDownX, x1 / screenWidth, false, isFingureUp, mScaleValueY,mUuterRadiusValue,transitionValue,angle);
 
 
 
@@ -385,6 +390,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if(mScaleValue<0.57 && mScaleValueY <.63){
                             mScaleValue=0.42f;
                             mScaleValueY=0.6f;
+                            transitionValue=0;
 
                             if(mScaleValueY<0.6){
                                 mScaleValueY=0.6f;
@@ -396,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }else {
                             mScaleValue=1.0f;
                             mScaleValueY=1.0f;
+                            transitionValue=600;
                             directionOffset=xOfffset;
                             isOpened=false;
                         }
@@ -403,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d(TAG,"ACTION_UP mScaleValue :"+mScaleValue);
                         Log.d(TAG,"ACTION_UP mScaleValueY :"+mScaleValueY);
                         Log.d(TAG,"ACTION_UP isOpened :"+isOpened);
-                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT,mScaleValue /*,movingmScaleValue*/, directionOffset, (int) lastActionDownX, x1 / screenWidth, false, true, mScaleValueY,mUuterRadiusValue);
+                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT,mScaleValue /*,movingmScaleValue*/, directionOffset, (int) lastActionDownX, x1 / screenWidth, false, true, mScaleValueY,mUuterRadiusValue,transitionValue,angle);
 
                     }
                 }
