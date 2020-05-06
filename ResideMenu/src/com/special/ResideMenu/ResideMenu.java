@@ -657,8 +657,7 @@ public class ResideMenu extends FrameLayout {
 
         if (touchEventStateUp) {
             if (mScaleValue <= 0.56) {
-                mScaleValue = 0.41f;
-                mScaleValueY = 0.656f;
+
                 isOpened = true;
                 scrollViewMenu.setTranslationX(transitionValue);
                 AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity, mScaleValue, mScaleValueY * multiPlyerValye, TAG);
@@ -678,7 +677,7 @@ public class ResideMenu extends FrameLayout {
                 mScaleValueY = 1.0f;
                 scrollViewMenu.setTranslationX(transitionValue);
 
-                isOpened = false;
+                //isOpened = false;
                 AnimatorSet scaleUp_activity = buildScaleUpAnimation(viewActivity, mScaleValue, mScaleValueY, TAG);
                 AnimatorSet scaleUp_shadow = buildScaleUpAnimation(imageViewShadow, mScaleValue, mScaleValueY, TAG);
                 AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 0.0f, TAG);
@@ -692,13 +691,15 @@ public class ResideMenu extends FrameLayout {
             }
 
         } else {
+            isOpened=true;
+            showScrollViewMenu(scrollViewMenu);
+            scrollViewMenu.setTranslationX(transitionValue);
+
             if(xOffSet>0){
                 /*
                 * when left to right swipe
                 * */
-                isOpened=true;
-                showScrollViewMenu(scrollViewMenu);
-                scrollViewMenu.setTranslationX(transitionValue);
+
 
                 AnimatorSet scaleUp_activity = buildScaleUpAnimationDublicate(viewActivity, mScaleValue, mScaleValueY, TAG,rotationY);
                 AnimatorSet scaleUp_shadow = buildScaleUpAnimationDublicate(imageViewShadow, mScaleValue, mScaleValueY, TAG, rotationY);
@@ -714,6 +715,10 @@ public class ResideMenu extends FrameLayout {
                 /*
                  * when right to left swipe
                  * */
+
+                isOpened=true;
+                showScrollViewMenu(scrollViewMenu);
+                scrollViewMenu.setTranslationX(transitionValue);
 
                 AnimatorSet scaleDown_activity = buildScaleDownAnimationDublicate(viewActivity, mScaleValue, mScaleValueY * multiPlyerValye, TAG,rotationY);
                 AnimatorSet scaleDown_shadow = buildScaleDownAnimationDublicate(imageViewShadow,
@@ -731,16 +736,10 @@ public class ResideMenu extends FrameLayout {
 
 
 
-
-
-
-
-
-
             if (mScaleValue < .68 /*&&*/|| mScaleValueY < .73) {
-                isOpened = true;
-                showScrollViewMenu(scrollViewMenu);
-                scrollViewMenu.setTranslationX(transitionValue);
+              //  isOpened = true;
+                //showScrollViewMenu(scrollViewMenu);
+                //scrollViewMenu.setTranslationX(transitionValue);
 
 //                viewActivity.setScaleX(mScaleValue);
 //                viewActivity.setScaleY(mScaleValueY);
@@ -1113,13 +1112,13 @@ public class ResideMenu extends FrameLayout {
         scaleX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                Log.d(TAG, "onAnimationUpdate: scaleX " + animation.getAnimatedValue());
+                Log.d(TAG, "onAnimationUpdate dublicate: scaleX " + animation.getAnimatedValue());
             }
         });
         scaleY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                Log.d(TAG, "onAnimationUpdate: scaleY " + animation.getAnimatedValue());
+                Log.d(TAG, "onAnimationUpdate dublicate: scaleY " + animation.getAnimatedValue());
             }
         });
 

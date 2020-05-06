@@ -153,15 +153,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d(TAG, "ACTION_MOVE: isFingureUp " + isFingureUp);
 
                         if(isOpened){
+
                             /*
-                             * this block for close door
+                             * this block for closing door
                              * */
 
                             if(xOffset>0){
 
-
                                 // for mScaleX
-                                Double d = new Double(((0.45 -1/*1-0.45*/) / (getScreenWidth()) * (moving)) + mPreviousScaleX);
+                                Double d = new Double(((0.41 -1) / (getScreenWidth()) * (moving)) + mPreviousScaleX);
                                 mScaleValue=d.floatValue();
                                 if(mScaleValue<0.42){
                                     mScaleValue=0.42f;
@@ -169,12 +169,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                 // for yAxis
                                 // Double yd1 = new Double((0.76 - 1) / getScreenHeight()) * moving + 0.7;
-                                Double yd1 = (((0.656 - 1/*1-0.76*/) / getScreenHeight()) * moving) + mScaleValueYprevious;
+                              //  Double yd1 = (((0.656 - 1/*1-0.76*/) / getScreenHeight()) * moving) + mScaleValueYprevious;
+                                Double yd1 = (((0.4199 - 1) / getScreenHeight()) * moving) + mScaleValueYprevious;
+                               // Double yd1 = (((0.768-1)/(0.45-1)) * (mScaleValue)) + mScaleValueYprevious;
                                 mScaleValueY=yd1.floatValue();
 
-                                if(mScaleValueY<0.656){
+                                Log.d(TAG,"ewewewe 1 " + mScaleValueYprevious);
+                                Log.d(TAG,"ewewewe 2 " + mScaleValueY);
+
+                               /*  if(mScaleValueY<0.656){
                                     mScaleValueY=0.656f;
-                                }
+                                }*/
 
                                 Log.d(TAG,"mScaleValueY"+mScaleValueY);
 
@@ -194,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 transitionValue  = (int)2400*mScaleValue-getScreenWidth();
 
                                 //  Double rotatinY= ((0.0-10.0)/getScreenWidth())*moving;
-                                Double rotatinY=  ((-8 - 0.0) / (getScreenWidth()) * (moving)) +mPreviousRotationY;
+                                Double rotatinY=  ((-10 - 0.0) / (getScreenWidth()) * (moving)) +mPreviousRotationY;
                                 mRotationY=rotatinY.floatValue();
                                 Log.d(TAG,"mRotationY :"+ rotatinY.floatValue());
 
@@ -205,25 +210,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         }else {
                             /*
-                             * this block for closing door
+                             * this block for opening door
                              * */
 
                             //for scaleX
-                            Double d = ((0.45 - /*0.7*/1) / (getScreenWidth()) * (moving)) + /*.7*/1;
+                            Double d = ((0.41 - 1) / (getScreenWidth()) * (moving)) + 1;
                             // Double d = new Double(((0.45-mPreviousScaleX)/(1000)*(moving)+0.45));
                             mPreviousScaleX = d.floatValue();
                             mScaleValue = d.floatValue();
+                            mPrevipousScaleValue = mScaleValue;
+                            Log.d(TAG, "ACTION_MOVE : mScaleValue : " + mScaleValue);
 
                             // for scaleY
-                            Double y1 = (((0.656 - 1) / (getScreenHeight())) * (moving)) + 1/*0.768*/;
-                             mScaleValueY = y1.floatValue();
+                           // Double y1 = (((0.656 - 1) / (getScreenHeight())) * (moving)) + 1;
+                           // Double y1 = (((0.656 - 1) / (getScreenHeight())) * (moving)) + 1;
+                            Double y1 = (((0.4199 - 1) / (getScreenHeight())) * (moving)) + 1;
+                           // Double y1 = (((0.768-1)/(0.45-1)) * (mScaleValue)) + 0.578181;
+                            // mScaleValueY = y1.floatValue();
+                            mScaleValueY=y1.floatValue();
                             if(y1.floatValue()>=0.656 || y1.floatValue()<=1.0f){
-                               // mScaleValueY=y1.floatValue();
+                                //  mScaleValueY=y1.floatValue();
                             }
                             //  mScaleValueY=(float) (0.421*moving)+0.578f;
                             mScaleValueYprevious = mScaleValueY;
-                            Log.d(TAG, "ACTION_MOVE : mScaleValue : " + mScaleValue);
-                            mPrevipousScaleValue = mScaleValue;
                             Log.d(TAG, "ACTION_MOVE: mPrevipousScaleValue : " + mScaleValueYprevious);
 
                             // for mUuterRadiusValue value
@@ -248,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             // for mRotationY
                             // mRotationY= ((0-10)/(float)getScreenWidth())*moving;
-                            Double d12 = ((-8 - 0.0) / (getScreenWidth()) * (moving)) + 0.0;
+                            Double d12 = ((-10 - 0.0) / (getScreenWidth()) * (moving)) + 0.0;
                             mRotationY=d12.floatValue();
                             mPreviousRotationY=d12.floatValue();
                             Log.d(TAG, "ACTION_MOVE: mRotationY : " + mRotationY);
@@ -258,80 +267,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-/*
-                        if (!isFingureUp) {
-                            //for scaleX
-                            Double d = new Double(((0.45 -*//*mPreviousScaleX*//*.7) / (getScreenWidth()) * (moving)) + .7);
-                            // for scaleY
-
-                            // Double d = new Double(((0.45-mPreviousScaleX)/(1000)*(updatedMovingValue)+0.45));
-                            mPreviousScaleX = d.floatValue();
-                            mScaleValue = d.floatValue();
-
-                            Double y1 = new Double((0.76 - 1) / getScreenHeight()) * moving + 0.7;
-                            mScaleValueY = y1.floatValue();
-                            mScaleValueYprevious = mScaleValueY;
-                            Log.d(TAG, "mScaleValue : " + mScaleValue);
-                            mPrevipousScaleValue = mScaleValue;
-                            Log.d(TAG, "ACTION_MOVE: mPrevipousScaleValue : " + mPrevipousScaleValue);
-
-                            // for mOuterRadiusValue value
-                            Double outerRadius = new Double(((0 -*//*mPreviousScaleX*//*35) / (getScreenHeight()) * (moving)) );
-                            mOuterRadiusValue=outerRadius.floatValue();
-
-
-
-
-                        } else {
-                            if (xOffset < 0) {
-                                // for right to left
-                                rotationDirection = 1;
-                                moreThanOneSwipe = true;
-                                Double d = new Double(((0.45 -*//*mPreviousScaleX*//*.7) / (getScreenWidth()) * (moving)) + mPreviousScaleX);
-                                mScaleValue = d.floatValue();
-                                if (mScaleValue < 0.42) {
-                                    mScaleValue = 0.42f;
-                                }
-                              *//* if(mScaleValue<0.62){
-                                   mScaleValue=0.42f;
-                               }*//*
-
-
-
-                                // for scaleY
-                                Double y1 = new Double((0.76 - 1) / getScreenHeight()) * moving + mScaleValueYprevious;
-                                mScaleValueY = y1.floatValue();
-                                if(mScaleValueY<0.6){
-                                    mScaleValueY=0.6f;
-                                }
-                              *//* if(mScaleValueY<0.76){
-                                   mScaleValueY=0.6f;
-                               }*//*
-
-
-                                Log.e(TAG, "ACTION_MOVE: mScaleValueY" + mScaleValueY);
-
-
-                            } else {
-                                // for left to right
-                                rotationDirection = 2;
-                                rightSwipeMoreThanOne = true;
-                                Double dprivious = new Double(((0.45 -*//*mPreviousScaleX*//*.7) / (getScreenWidth()) * (moving)) + mPreviousScaleX);
-                                mScaleValue = dprivious.floatValue();
-
-
-
-                                // for scaleY
-                                Double y1 = new Double((0.76 - 1) / getScreenHeight()) * moving + mScaleValueYprevious;
-                                mScaleValueY = y1.floatValue();
-
-
-
-                            }
-
-
-                        }*/
-                        if(mScaleValue<=1.0f){
+                        if(mScaleValue<=1.0f && mScaleValue >=0.45){
                             resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*//* moving*/mScaleValue, xOffset, (int) lastActionDownX, x1 / screenWidth, false, isFingureUp, mScaleValueY,mOuterRadiusValue,mInerRadius,transitionValue,mRotationY);
                         }
                         break;
@@ -351,95 +287,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //  int xOfffset = (int) (event.getX() - lastActionDownX);
                         int xOfffset = (int) (event.getRawX() - lastActionDownX);
 
-                       /* Log.d(TAG, "ACTION_UP: " + x1 );
-                        Log.d(TAG, "ACTION_UP:  event.getX()  " + event.getX());
-                        Log.d(TAG, "ACTION_UP:  lastActionDownX  " + lastActionDownX);
-                        Log.d(TAG, "ACTION_UP:  isFingureUp  " + isFingureUp);*/
                         float deltaX = -(event.getRawX() - startX);
-                      /*
-
-                        if (rotationDirection == 1) {
-
-                            // this block for right to left swipe
-
-                            Double prevRotation = new Double(((0.45 -*//*mPreviousScaleX*//*.7) / (getScreenWidth()) * (deltaX)) + mPreviousScaleX);
-                            mPreviousScaleX = prevRotation.floatValue();
-                                if (mPreviousScaleX < 0.42f) {
-                                    mPreviousScaleX = 0.42f;
-                                }
-
-                          *//*  if(mPreviousScaleX<.62){
-                                mPreviousScaleX = 0.42f;
-                            }*//*
-                         *//*
-                            if (moreThanOneSwipe) {
-                                mPreviousScaleX = d.floatValue();
-                               *//**//* if (mPreviousScaleX < 0.42f) {
-                                    mPreviousScaleX = 0.42f;
-                                }*//**//*
-
-                               if(mPreviousScaleX<.62){
-                                   mPreviousScaleX = 0.42f;
-                               }
-
-                                Log.d(TAG, "ACTION_UP mPreviousScaleX :" + mPreviousScaleX);
-                            }*//*
-
-                            // for ScaleY
-                            Double previoisScaley = new Double((0.76 - 1) / getScreenHeight()) * deltaX + mScaleValueYprevious;
-                            mScaleValueYprevious = previoisScaley.floatValue();
-                            if (mScaleValueYprevious < 0.6) {
-                                mScaleValueYprevious = 0.6f;
-                            }
-                           *//*if(mScaleValueYprevious<.76){
-                               mScaleValueYprevious=0.6f;
-                           }*//*
-
-                            moreThanOneSwipe = false;
-                            Log.d(TAG, "ACTION_UP mPreviousScaleX :" + mPreviousScaleX);
-                        } else {
-                            *//*
-                         * this block when left to right swipe
-                         * *//*
-
-                            // for scaleX
-                            Double dprivious = new Double(((0.45 - .7) / (getScreenWidth()) * (deltaX)) + mPreviousScaleX);
-                            if (rightSwipeMoreThanOne) {
-
-                                mPreviousScaleX = dprivious.floatValue();
-
-                            }
-                            rightSwipeMoreThanOne = false;
-
-                            // for ScaleY
-                            Double prevdouble = new Double((0.76 - 1) / getScreenHeight()) * deltaX + mScaleValueYprevious;
-                            mScaleValueYprevious = prevdouble.floatValue();
-
-                        }
-
-
-
-                      */
-
 
 
                         int directionOffset=xOfffset;
 
                         /*mScaleValue<0.62 && mScaleValueY <.76*/
                         if(mScaleValue<0.57 /*&&*/|| mScaleValueY <.63){
-                            mScaleValue=0.41999f;
+                            mScaleValue=0.41f;
+                           // mScaleValueY=0.768f;
                             mScaleValueY=0.656f;
                             transitionValue=0;
 
                             if(mScaleValueY<0.656){
-                                mScaleValueY=0.656f;
+                               // mScaleValueY=0.656f;
                             }
 
-                            mRotationY=-8;
+                            mRotationY=-10;
                             mInerRadius=28;
                             directionOffset=-xOfffset;
                             isOpened=true;
-                        }else {
+                        } else {
                             mScaleValue=1.0f;
                             mScaleValueY=1.0f;
                             transitionValue=600;
