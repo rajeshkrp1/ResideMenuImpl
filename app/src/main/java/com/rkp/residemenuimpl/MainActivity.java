@@ -5,11 +5,12 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -18,7 +19,6 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -27,10 +27,12 @@ import com.special.ResideMenu.TouchDisableView;
 
 import static android.view.View.inflate;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener /*, GestureDetector.OnGestureListener*/ {
     public static final int DIRECTION_LEFT = 0;
     public static final int DIRECTION_RIGHT = 1;
     private static final String TAG = "MainActivity";
+    private static final float SWIPE_THRESHOLD = 0.56f;
+    private static final float SWIPE_VELOCITY_THRESHOLD =100 ;
     CardView cvInner, cvDashboard;
     FrameLayout fl_image;
     int x1, x2, y1, y2, dx, dy;
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AnimatorSet animatorSet;
     private int percentage;
     private float lastActionDownX, lastActionDownY;
+    private float alphaAnimation,previousAlphaAnimation;
     private boolean isFingureUp;
     private boolean moreThanOneSwipe, rightSwipeMoreThanOne;
     private DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -60,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private  float mOuterRadiusValue,outerRadiusPreviousValue,mInerRadius,inerRadiusPreviousValue;
     private float transitionValue;
     float mRotationY,mPreviousRotationY;
+    private GestureDetector gestureDetector;
+
 
 
     private ResideMenu.OnMenuDublicateListener menuDublicateListener = new ResideMenu.OnMenuDublicateListener() {
@@ -115,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cvDashboard.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                gestureDetector.onTouchEvent(event);
                 float X = event.getRawX();
                 final float Y = event.getRawY();
 
@@ -203,6 +209,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mRotationY=rotatinY.floatValue();
                                 Log.d(TAG,"mRotationY :"+ rotatinY.floatValue());
 
+                                // for alphaAnimation
+                                Double alphaAnim=(((1-0.0)/getScreenWidth())*moving)+previousAlphaAnimation;
+                                alphaAnimation=alphaAnim.floatValue();
+                                Log.d(TAG,"alphaAnim :"+ alphaAnim.floatValue());
+
+
                             }else {
                                 mScaleValue=0.41999f;
                                 mScaleValueY=0.656f;
@@ -262,13 +274,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mPreviousRotationY=d12.floatValue();
                             Log.d(TAG, "ACTION_MOVE: mRotationY : " + mRotationY);
 
+
+                            Double alphaAnim=(((1-0.0)/getScreenWidth())*moving)+0.0f;
+                            alphaAnimation=alphaAnim.floatValue();
+                            previousAlphaAnimation=alphaAnimation;
+                            Log.d(TAG, "ACTION_MOVE: alphaAnimation : " + alphaAnimation);
+
+
                         }
 
-
-
-
                         if(mScaleValue<=1.0f && mScaleValue >=0.45){
-                            resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*//* moving*/mScaleValue, xOffset, (int) lastActionDownX, x1 / screenWidth, false, isFingureUp, mScaleValueY,mOuterRadiusValue,mInerRadius,transitionValue,mRotationY);
+                            resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*//* moving*/mScaleValue, xOffset, (int) lastActionDownX, x1 / screenWidth, false, isFingureUp, mScaleValueY,mOuterRadiusValue,mInerRadius,transitionValue,mRotationY, alphaAnimation);
                         }
                         break;
 
@@ -283,25 +299,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d(TAG,"mScaleValueY"+mScaleValueY);
 
                         dx = x2 - x1;
-                        // dy = y2 - y1;
                         //  int xOfffset = (int) (event.getX() - lastActionDownX);
                         int xOfffset = (int) (event.getRawX() - lastActionDownX);
 
                         float deltaX = -(event.getRawX() - startX);
-
-
                         int directionOffset=xOfffset;
 
-                        /*mScaleValue<0.62 && mScaleValueY <.76*/
                         if(mScaleValue<0.57 /*&&*/|| mScaleValueY <.63){
                             mScaleValue=0.41f;
-                           // mScaleValueY=0.768f;
                             mScaleValueY=0.656f;
                             transitionValue=0;
 
-                            if(mScaleValueY<0.656){
+                           /* if(mScaleValueY<0.656){
                                // mScaleValueY=0.656f;
-                            }
+                            }*/
 
                             mRotationY=-10;
                             mInerRadius=28;
@@ -320,11 +331,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d(TAG,"ACTION_UP mScaleValue :"+mScaleValue);
                         Log.d(TAG,"ACTION_UP mScaleValueY :"+mScaleValueY);
                         Log.d(TAG,"ACTION_UP isOpened :"+isOpened);
-                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT,mScaleValue , directionOffset, (int) lastActionDownX, x1 / screenWidth, false, true, mScaleValueY,mOuterRadiusValue,mInerRadius,transitionValue,mRotationY);
+                        resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT,mScaleValue , directionOffset, (int) lastActionDownX, x1 / screenWidth, false, true, mScaleValueY,mOuterRadiusValue,mInerRadius,transitionValue,mRotationY,alphaAnimation);
 
                     }
                 }
                 return false;
+
             }
 
         });
@@ -337,6 +349,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
         screenWidth = displayMetrics.widthPixels;
+
+         gestureDetector = new GestureDetector(new GestureListener());
 
         Log.d(TAG, screenWidth + "    screen");
         Log.d(TAG, "screenWidth" + getScreenWidth() + "");
@@ -420,6 +434,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public int getScreenWidth() {
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.widthPixels;
+    }
+
+
+    private class GestureListener extends SimpleOnGestureListener {
+        @Override
+        public boolean onFling(MotionEvent downEvent, MotionEvent upEvent, float velocityX, float velocityY) {
+            boolean result=false;
+            float diffY=upEvent.getY()-downEvent.getY();
+            float diffX=upEvent.getX()-downEvent.getX();
+            // which was graeter moovement across X or Y ?
+            if(Math.abs(diffX)>Math.abs(diffY)){
+                //  right or left swipe
+
+                if(Math.abs(diffX)>SWIPE_THRESHOLD && Math.abs(velocityX)>SWIPE_VELOCITY_THRESHOLD){
+                    if(diffX>0){
+                        onSwipRight();
+                    }else {
+                        onSwipeLeft();
+                    }
+
+                }
+
+
+            }else {
+                // top or bottom swipe
+            }
+
+
+
+            return result;
+        }
+    }
+
+    private void onSwipRight() {
+       // Toast.makeText(MainActivity.this, "Right Swipe", Toast.LENGTH_SHORT).show();
+        Log.d("AAAA","Right Swipe");
+    }
+    private void onSwipeLeft() {
+       // Toast.makeText(MainActivity.this, "Left Swipe", Toast.LENGTH_SHORT).show();
+        Log.d("AAAA","Left Swipe");
+
     }
 
 

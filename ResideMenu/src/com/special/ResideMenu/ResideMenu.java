@@ -561,7 +561,7 @@ public class ResideMenu extends FrameLayout {
     }
 
 
-    public void openDublicateMenu(int direction, float mScaleValue, int xOffSet, int lastActionDownX, int scaleX, boolean openstatus, boolean touchEventStateUp, float mScaleValueY, float outerRadiusValue,float inerRadiusValue, float transitionValue, float rotationY) {
+    public void openDublicateMenu(int direction, float mScaleValue, int xOffSet, int lastActionDownX, int scaleX, boolean openstatus, boolean touchEventStateUp, float mScaleValueY, float outerRadiusValue, float inerRadiusValue, float transitionValue, float rotationY, float alphaAnimation) {
         final String TAG = ResideMenu.TAG_DEFAULT + "|openDMenu";
 
         if (!openMenuStarted) {
@@ -645,7 +645,7 @@ public class ResideMenu extends FrameLayout {
         Log.d(TAG, "beforeInsideMethod: mScaleValue " + mScaleValue + "");
         Log.d(TAG, "beforeInsideMethod: imageViewShadow " + imageViewShadow + "");
         Log.d(TAG, "beforeInsideMethod: shadowAdjustScaleX " + shadowAdjustScaleX + "");
-        Log.d(TAG, "beforeInsideMethod: shadowAdjustScaleX " + shadowAdjustScaleX + "");
+        Log.d(TAG, "beforeInsideMethod: shadowAdjustScaleY " + shadowAdjustScaleY + "");
         Log.d(TAG, "beforeInsideMethod: mScaleValueY " + mScaleValueY + "");
         Log.d(TAG, "beforeInsideMethod: transitionValue " + transitionValue + "");
         Log.d(TAG, "beforeInsideMethod: rotationY " + rotationY + "");
@@ -677,7 +677,7 @@ public class ResideMenu extends FrameLayout {
                 mScaleValueY = 1.0f;
                 scrollViewMenu.setTranslationX(transitionValue);
 
-                //isOpened = false;
+                isOpened = false;
                 AnimatorSet scaleUp_activity = buildScaleUpAnimation(viewActivity, mScaleValue, mScaleValueY, TAG);
                 AnimatorSet scaleUp_shadow = buildScaleUpAnimation(imageViewShadow, mScaleValue, mScaleValueY, TAG);
                 AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 0.0f, TAG);
@@ -693,22 +693,24 @@ public class ResideMenu extends FrameLayout {
         } else {
             isOpened=true;
             showScrollViewMenu(scrollViewMenu);
-            scrollViewMenu.setTranslationX(transitionValue);
+           // scrollViewMenu.setTranslationX(transitionValue);
 
             if(xOffSet>0){
                 /*
                 * when left to right swipe
                 * */
-
+                Log.d("zzzz",outerRadiusValue+"");
+                scrollViewMenu.setTranslationX(transitionValue);
 
                 AnimatorSet scaleUp_activity = buildScaleUpAnimationDublicate(viewActivity, mScaleValue, mScaleValueY, TAG,rotationY);
-                AnimatorSet scaleUp_shadow = buildScaleUpAnimationDublicate(imageViewShadow, mScaleValue, mScaleValueY, TAG, rotationY);
-                AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 0.0f, TAG);
-                AnimatorSet alpha_right_menu = buildMenuAnimationOpen(layoutRightMenu, 0.0f, TAG);
+                AnimatorSet scaleUp_shadow = buildScaleUpAnimationDublicate(imageViewShadow, (mScaleValue+shadowAdjustScaleX), (mScaleValueY+shadowAdjustScaleY), TAG, rotationY);
+                AnimatorSet alpha_menu = buildMenuAnimationOpendublicate(scrollViewMenu, 1.0f/*0.0f*/, TAG);
+                AnimatorSet alpha_right_menu = buildMenuAnimationOpendublicate(layoutRightMenu, 1.0f/*0.0f*/, TAG);
                 scaleUp_activity.addListener(animationDublicateListener);
-                scaleUp_activity.playTogether(scaleUp_shadow, alpha_menu, alpha_right_menu, animator,outerRadiusAnimator, translationClose);
+                scaleUp_activity.playTogether(scaleUp_shadow, alpha_menu, alpha_right_menu, animator/*,outerRadiusAnimator, translationClose*/);
                 scaleUp_activity.setDuration(0);
                 scaleUp_activity.start();
+
 
             }else {
 
@@ -733,83 +735,6 @@ public class ResideMenu extends FrameLayout {
                 scaleDown_activity.start();
 
             }
-
-
-
-            if (mScaleValue < .68 /*&&*/|| mScaleValueY < .73) {
-              //  isOpened = true;
-                //showScrollViewMenu(scrollViewMenu);
-                //scrollViewMenu.setTranslationX(transitionValue);
-
-//                viewActivity.setScaleX(mScaleValue);
-//                viewActivity.setScaleY(mScaleValueY);
-//
-//                if (mUse3D) {
-//                    viewActivity.setRotationY(rotationY);
-//                }
-//
-//                if (xOffSet > 0) {
-//
-//                    viewActivity.setScaleX(mScaleValue);
-//                    viewActivity.setScaleY(mScaleValueY);
-//                    if(mUse3D){
-//                        viewActivity.setRotationY(rotationY);
-//                    }
-//
-//
-//                    PropertyValuesHolder rotate = PropertyValuesHolder.ofFloat(View.ROTATION_Y, -8, rotationY); // /*- (-updatedMovingValue)*/
-//                    ObjectAnimator threeDRotation = ObjectAnimator.ofPropertyValuesHolder(viewActivity, rotate);
-//                    threeDRotation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//                        @Override
-//                        public void onAnimationUpdate(ValueAnimator animation) {
-//                            Log.d(TAG, "onAnimationUpdate: rotate " + animation.getAnimatedValue());
-//                             viewActivity.setRotationY((float)animation.getAnimatedValue());
-//                        }
-//                    });
-//                    threeDRotation.setDuration(0);
-//                    threeDRotation.start();
-//
-//
-//                } else {
-
-
-
-
-
-                      //  viewActivity.setRotationY(rotationY);
-
-
-
-                /*    AnimatorSet scaleDown_activity = buildScaleDownAnimationDublicate(viewActivity, mScaleValue, mScaleValueY * multiPlyerValye, TAG,rotationY);
-                    AnimatorSet scaleDown_shadow = buildScaleDownAnimationDublicate(imageViewShadow,
-                            (mScaleValue + shadowAdjustScaleX), (mScaleValueY + shadowAdjustScaleY) * multiPlyerValye, TAG, rotationY);
-                    AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 1.0f, TAG);
-                    AnimatorSet aplha_rightMenu = buildMenuAnimationOpen(layoutRightMenu, 1.0f, TAG);
-                    //scaleDown_activity.addListener(animationListener);
-                    scaleDown_activity.addListener(animationDublicateListener);
-                    scaleDown_activity.playTogether(scaleDown_shadow, alpha_menu, aplha_rightMenu, animator, outerRadiusAnimator, translation);
-                    scaleDown_activity.setDuration(0);
-                    scaleDown_activity.setInterpolator(AnimationUtils.loadInterpolator(activity, android.R.anim.decelerate_interpolator));
-                    scaleDown_activity.start();
-*/               // }
-            } else {
-             /*   mScaleValue = 1.0f;
-                mScaleValueY = 1.0f;
-
-                viewActivity.setScaleX(mScaleValue);
-                viewActivity.setScaleY(mScaleValueY);
-                if (mUse3D) {
-                    //viewActivity.setRotationY(rotationY);
-                }
-                AnimatorSet scaleUp_activity = buildScaleUpAnimation(viewActivity, mScaleValue, mScaleValueY, TAG);
-                AnimatorSet scaleUp_shadow = buildScaleUpAnimation(imageViewShadow, mScaleValue, mScaleValueY, TAG);
-                AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 0.0f, TAG);
-                AnimatorSet alpha_right_menu = buildMenuAnimationOpen(layoutRightMenu, 0.0f, TAG);
-                scaleUp_activity.addListener(animationDublicateListener);
-                scaleUp_activity.playTogether(scaleUp_shadow, alpha_menu, alpha_right_menu, animatorClose, outerRadiusAnimatorClose, translationClose);
-                scaleUp_activity.setDuration(0);
-                scaleUp_activity.start();
-*/            }
 
 
         }
@@ -1197,6 +1122,26 @@ public class ResideMenu extends FrameLayout {
         });
         return alphaAnimation;
     }
+
+
+    private AnimatorSet buildMenuAnimationOpendublicate(View target, float alpha, final String TAG) {
+
+        AnimatorSet alphaAnimation = new AnimatorSet();
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(target, "alpha", alpha);
+        alphaAnimation.play(objectAnimator);
+        alphaAnimation.setInterpolator(AnimationUtils.loadInterpolator(activity,
+                android.R.anim.accelerate_decelerate_interpolator));
+        alphaAnimation.setDuration(0);
+        alphaAnimation.start();
+        objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Log.d(TAG, "onAnimationUpdateDublicate: alphaAnimation " + animation.getAnimatedValue());
+            }
+        });
+        return alphaAnimation;
+    }
+
 
     /**
      * If there were some view you don't want reside menu
