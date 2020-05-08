@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int DIRECTION_LEFT = 0;
     public static final int DIRECTION_RIGHT = 1;
     private static final String TAG = "MainActivity";
-    private static final float SWIPE_THRESHOLD = 0.56f;
+    private static final float SWIPE_THRESHOLD = 100f;
     private static final float SWIPE_VELOCITY_THRESHOLD =100 ;
     CardView cvInner, cvDashboard;
     FrameLayout fl_image;
@@ -61,9 +61,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DisplayMetrics displayMetrics = new DisplayMetrics();
     private AppBarLayout appBar;
     private  float mOuterRadiusValue,outerRadiusPreviousValue,mInerRadius,inerRadiusPreviousValue;
-    private float transitionValue;
+    private float transitionValue,previousTransitionValue;
     float mRotationY,mPreviousRotationY;
     private GestureDetector gestureDetector;
+    private int flingState;   /// 1 for open 2 for close
 
 
 
@@ -126,18 +127,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 switch (event.getAction()) {
                     case (MotionEvent.ACTION_DOWN):
+                        Log.d("AAAA 0","ACTION_DOWN");
+
                         lastActionDownX = event.getRawX();
                         lastActionDownY = event.getRawY();
                         isFingureUp=false;
                         startX = event.getRawX();
                         x1 = (int) event.getX();
                         y1 = (int) event.getY();
-                        Log.d(TAG, "ACTION_DOWN: " + x1 + " ,  " + y1);
                         Log.d(TAG, "ACTION_DOWN: getX " + startX);
                         break;
 
                     case (MotionEvent.ACTION_MOVE):
-                        Log.d(TAG, "ACTION_MOVE: " + x1 + " ,  " + y1);
+                        Log.d("AAAA 1","ACTION_MOVE");
+
                         Log.d(TAG, "ACTION_MOVE: getScreenWidth" + getScreenWidth());
                         Log.d(TAG, "ACTION_MOVE: getScreenHeight" + getScreenHeight());
 
@@ -151,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         //previousDeltaX=deltaX;
 
-                        Log.d(TAG, "ACTION_MOVE: deltaX " + deltaX);
+                        //Log.d(TAG, "ACTION_MOVE: deltaX " + deltaX);
                         Log.d(TAG, "ACTION_MOVE: moving " + moving);
                         Log.d(TAG, "ACTION_MOVE: offsetX " + xOffset);
                         Log.d(TAG, "ACTION_MOVE: lastActionDownX " + lastActionDownX);
@@ -169,10 +172,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 // for mScaleX
                                 Double d = new Double(((0.41 -1) / (getScreenWidth()) * (moving)) + mPreviousScaleX);
                                 mScaleValue=d.floatValue();
-                                if(mScaleValue<0.42){
+                               /* if(mScaleValue<0.42){
                                     mScaleValue=0.42f;
-                                }
-
+                                }*/
+                                Log.d(TAG,"SVX 2:"+mScaleValue);
                                 // for yAxis
                                 // Double yd1 = new Double((0.76 - 1) / getScreenHeight()) * moving + 0.7;
                               //  Double yd1 = (((0.656 - 1/*1-0.76*/) / getScreenHeight()) * moving) + mScaleValueYprevious;
@@ -203,6 +206,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                 // for translation
                                 transitionValue  = (int)2400*mScaleValue-getScreenWidth();
+                                //Double aa=(((600-0.0)/(getScreenWidth()))*(moving))+0.0;
+                               // transitionValue=Math.abs(aa.floatValue());
+                              //  Log.d("AZ",aa.floatValue()+"");
+                                Log.d(TAG, "ACTION_MOVE: transitionValue : " + transitionValue);
+
 
                                 //  Double rotatinY= ((0.0-10.0)/getScreenWidth())*moving;
                                 Double rotatinY=  ((-10 - 0.0) / (getScreenWidth()) * (moving)) +mPreviousRotationY;
@@ -231,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mPreviousScaleX = d.floatValue();
                             mScaleValue = d.floatValue();
                             mPrevipousScaleValue = mScaleValue;
+                            Log.d(TAG,"SVX 1:"+mScaleValue);
                             Log.d(TAG, "ACTION_MOVE : mScaleValue : " + mScaleValue);
 
                             // for scaleY
@@ -263,8 +272,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             //  transitionValue  = (int) (((600-0) / (/*getScreenWidth()/2*/542) * (moving)));
                             // transitionValue  = (int) (((600) / (getScreenWidth()) * (moving))+1);
                             transitionValue  = (int)2400*mScaleValue-getScreenWidth();
-                            // transitionValue=transition.intValue();
+                           // Double aa=(((0.0-600)/(getScreenWidth()))*(moving))+600;
+                           // previousTransitionValue=aa.floatValue();
+                            //transitionValue=aa.floatValue();
                             Log.d(TAG, "ACTION_MOVE: transitionValue : " + transitionValue);
+                            //Log.d(TAG, "AZ: transitionValue : " + aa.floatValue());
                             Log.d(TAG, "ACTION_MOVE: moving : " + moving);
 
                             // for mRotationY
@@ -291,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     case (MotionEvent.ACTION_UP): {
                         isFingureUp = true;
+                        Log.d("AAAA 2","ACTION_UP");
 
                         x2 = (int) event.getX();
                         y2 = (int) event.getY();
@@ -305,20 +318,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         float deltaX = -(event.getRawX() - startX);
                         int directionOffset=xOfffset;
 
-                        if(mScaleValue<0.57 /*&&*/|| mScaleValueY <.63){
+
+                        if(flingState==1  /* fling State 1 for open door and 2 for close door*/){
                             mScaleValue=0.41f;
                             mScaleValueY=0.656f;
                             transitionValue=0;
-
-                           /* if(mScaleValueY<0.656){
-                               // mScaleValueY=0.656f;
-                            }*/
 
                             mRotationY=-10;
                             mInerRadius=28;
                             directionOffset=-xOfffset;
                             isOpened=true;
-                        } else {
+                            flingState=0;
+
+                        }else if(flingState==2){
                             mScaleValue=1.0f;
                             mScaleValueY=1.0f;
                             transitionValue=600;
@@ -326,6 +338,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mInerRadius=0;
                             directionOffset=xOfffset;
                             isOpened=false;
+                            flingState=0;
+                        }else if(mScaleValue<0.57){
+
+                            mScaleValue=0.41f;
+                            mScaleValueY=0.656f;
+                            transitionValue=0;
+                            mRotationY=-10;
+                            mInerRadius=28;
+                            directionOffset=-xOfffset;
+                            isOpened=true;
+
+
+                        }else {
+                            mScaleValue=1.0f;
+                            mScaleValueY=1.0f;
+                            transitionValue=600;
+                            mRotationY=0;
+                            mInerRadius=0;
+                            directionOffset=xOfffset;
+                            isOpened=false;
+
                         }
 
                         Log.d(TAG,"ACTION_UP mScaleValue :"+mScaleValue);
@@ -442,38 +475,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public boolean onFling(MotionEvent downEvent, MotionEvent upEvent, float velocityX, float velocityY) {
             boolean result=false;
             float diffY=upEvent.getY()-downEvent.getY();
-            float diffX=upEvent.getX()-downEvent.getX();
+            float diffX=upEvent.getRawX()-downEvent.getRawX();
             // which was graeter moovement across X or Y ?
             if(Math.abs(diffX)>Math.abs(diffY)){
                 //  right or left swipe
-
                 if(Math.abs(diffX)>SWIPE_THRESHOLD && Math.abs(velocityX)>SWIPE_VELOCITY_THRESHOLD){
                     if(diffX>0){
                         onSwipRight();
                     }else {
                         onSwipeLeft();
                     }
-
                 }
-
 
             }else {
                 // top or bottom swipe
             }
-
-
-
             return result;
         }
     }
 
     private void onSwipRight() {
-       // Toast.makeText(MainActivity.this, "Right Swipe", Toast.LENGTH_SHORT).show();
         Log.d("AAAA","Right Swipe");
+        flingState=2;
     }
     private void onSwipeLeft() {
-       // Toast.makeText(MainActivity.this, "Left Swipe", Toast.LENGTH_SHORT).show();
         Log.d("AAAA","Left Swipe");
+        flingState=1;
 
     }
 
