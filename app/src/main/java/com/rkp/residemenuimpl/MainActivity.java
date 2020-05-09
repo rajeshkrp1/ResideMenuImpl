@@ -225,6 +225,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     Log.d("TAG","dOpenFromClick mInerRadius :"+mInerRadius);
 
 
+                                    // for rotationY
+                                    Double aa = (((0.0-600 ) / (getScreenWidth())) * (moving)) + 0;
+                                    Log.d("TAG","dOpenFromClick mRotationY :"+aa.floatValue());
+                                    if(aa<0){
+                                        transitionValue=0;
+                                    }else transitionValue=aa.floatValue();
+
+
 
                                 } else {
 
@@ -427,7 +435,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }else if(flingState==2){
                             mScaleValue=1.0f;
                             mScaleValueY=1.0f;
-                            transitionValue=600;
+                            transitionValue=600-transitionValue;
                             mRotationY=0;
                             mInerRadius=0;
                             directionOffset=xOfffset;
@@ -447,7 +455,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }else {
                             mScaleValue=1.0f;
                             mScaleValueY=1.0f;
-                            transitionValue=600;
+                           // transitionValue=600;
+                            transitionValue=600-transitionValue;
                             mRotationY=0;
                             mInerRadius=0;
                             directionOffset=xOfffset;

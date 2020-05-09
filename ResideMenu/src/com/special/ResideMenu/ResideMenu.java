@@ -671,6 +671,7 @@ public class ResideMenu extends FrameLayout {
 
                 isOpened = true;
                 scrollViewMenu.setTranslationX(transitionValue);
+
                 AnimatorSet scaleDown_activity = buildScaleDownAnimation(viewActivity, mScaleValue, mScaleValueY * multiPlyerValye, TAG);
                 AnimatorSet scaleDown_shadow = buildScaleDownAnimation(imageViewShadow,
                         (mScaleValue + shadowAdjustScaleX), (mScaleValueY + shadowAdjustScaleY) * multiPlyerValye/*1.6f*/, TAG);
@@ -695,7 +696,7 @@ public class ResideMenu extends FrameLayout {
                 AnimatorSet alpha_right_menu = buildMenuAnimationOpen(layoutRightMenu, 0.0f, TAG);
 
                // scaleUp_activity.addListener(animationListener);
-                scaleUp_activity.playTogether(scaleUp_shadow, alpha_menu, alpha_right_menu, animatorClose, outerRadiusAnimatorClose, translationClose);
+                scaleUp_activity.playTogether(scaleUp_shadow, alpha_menu, alpha_right_menu, animatorClose, outerRadiusAnimatorClose/*, translationClose*/);
                 scaleUp_activity.setDuration(0);
 
                 scaleUp_activity.start();
@@ -714,6 +715,7 @@ public class ResideMenu extends FrameLayout {
                 Log.d("SVX 5 :",mScaleValue+"");
 
                 scrollViewMenu.setTranslationX(transitionValue);
+
                 layoutParams = (RelativeLayout.LayoutParams) cvInner.getLayoutParams();
                 ValueAnimator dynamicCloseAnimator = ValueAnimator.ofInt(0,(int)inerRadiusValue);
                 dynamicCloseAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
