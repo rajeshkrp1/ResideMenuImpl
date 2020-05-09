@@ -103,6 +103,7 @@ public class ResideMenu extends FrameLayout {
         @Override
         public void onAnimationStart(Animator animation) {
             if (isOpened()) {
+                Log.d("LIST","anim start");
                 showScrollViewMenu(scrollViewMenu);
                 if (menuListener != null)
                     menuListener.openMenu();
@@ -113,16 +114,21 @@ public class ResideMenu extends FrameLayout {
         public void onAnimationEnd(Animator animation) {
             // reset the view;
             if (isOpened()) {
-                viewActivity.setTouchDisable(true);
+               // viewActivity.setTouchDisable(true);
+               // viewActivity.setTouchDisable(false);
+                Log.d("LIST","anim end if");
+
                 viewActivity.setOnClickListener(viewActivityOnClickListener);
             } else {
-                viewActivity.setTouchDisable(false);
+               // viewActivity.setTouchDisable(false);
                 viewActivity.setOnClickListener(null);
                 hideScrollViewMenu(scrollViewLeftMenu);
                 hideScrollViewMenu(scrollViewRightMenu);
                 if (menuListener != null) {
                     menuListener.closeMenu();
                 }
+                Log.d("LIST","anim end else");
+
             }
             svRightMenu.fullScroll(View.FOCUS_UP);
 
@@ -645,20 +651,23 @@ public class ResideMenu extends FrameLayout {
         setdublicateScaleDirection(direction, mScaleValue, xOffSet, TAG);
 
         Log.d(TAG, "beforeInsideMethod: mScaleValue " + mScaleValue + "");
-        Log.d(TAG, "beforeInsideMethod: imageViewShadow " + imageViewShadow + "");
-        Log.d(TAG, "beforeInsideMethod: shadowAdjustScaleX " + shadowAdjustScaleX + "");
-        Log.d(TAG, "beforeInsideMethod: shadowAdjustScaleY " + shadowAdjustScaleY + "");
         Log.d(TAG, "beforeInsideMethod: mScaleValueY " + mScaleValueY + "");
         Log.d(TAG, "beforeInsideMethod: transitionValue " + transitionValue + "");
         Log.d(TAG, "beforeInsideMethod: rotationY " + rotationY + "");
-        Log.d(TAG, "beforeInsideMethod: xOffSet " + xOffSet + "");
         Log.d(TAG, "beforeInsideMethod: outerRadiusValue " + outerRadiusValue + "");
         Log.d(TAG, "beforeInsideMethod: inerRadiusValue " + inerRadiusValue + "");
         Log.d(TAG, "beforeInsideMethod: touchEventStateUp " + touchEventStateUp + "");
+       // Log.d(TAG, "beforeInsideMethod: imageViewShadow " + imageViewShadow + "");
+        Log.d(TAG, "beforeInsideMethod: shadowAdjustScaleX " + shadowAdjustScaleX + "");
+        Log.d(TAG, "beforeInsideMethod: shadowAdjustScaleY " + shadowAdjustScaleY + "");
+        Log.d(TAG, "beforeInsideMethod: xOffSet " + xOffSet + "");
+
 
 
         if (touchEventStateUp) {
             if (mScaleValue <= 0.56) {
+                mScaleValue=0.41f;
+                mScaleValueY=0.656f;
 
                 isOpened = true;
                 scrollViewMenu.setTranslationX(transitionValue);
@@ -667,7 +676,9 @@ public class ResideMenu extends FrameLayout {
                         (mScaleValue + shadowAdjustScaleX), (mScaleValueY + shadowAdjustScaleY) * multiPlyerValye/*1.6f*/, TAG);
                 AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 1.0f, TAG);
                 AnimatorSet aplha_rightMenu = buildMenuAnimationOpen(layoutRightMenu, 1.0f, TAG);
-                 scaleDown_activity.playTogether(scaleDown_shadow, alpha_menu, aplha_rightMenu, animator, outerRadiusAnimator, translation);
+              //  scaleDown_activity.addListener(animationListener);
+
+                scaleDown_activity.playTogether(scaleDown_shadow, alpha_menu, aplha_rightMenu, animator, outerRadiusAnimator, translation);
                 scaleDown_activity.setDuration(0);
                 scaleDown_activity.setInterpolator(AnimationUtils.loadInterpolator(activity, android.R.anim.decelerate_interpolator));
                 scaleDown_activity.start();
@@ -682,6 +693,8 @@ public class ResideMenu extends FrameLayout {
                 AnimatorSet scaleUp_shadow = buildScaleUpAnimation(imageViewShadow, mScaleValue, mScaleValueY, TAG);
                 AnimatorSet alpha_menu = buildMenuAnimationOpen(scrollViewMenu, 0.0f, TAG);
                 AnimatorSet alpha_right_menu = buildMenuAnimationOpen(layoutRightMenu, 0.0f, TAG);
+
+               // scaleUp_activity.addListener(animationListener);
                 scaleUp_activity.playTogether(scaleUp_shadow, alpha_menu, alpha_right_menu, animatorClose, outerRadiusAnimatorClose, translationClose);
                 scaleUp_activity.setDuration(0);
 
@@ -697,7 +710,8 @@ public class ResideMenu extends FrameLayout {
                 /*
                 * when left to right swipe
                 * */
-                Log.d("zzzz",outerRadiusValue+"");
+                Log.d(TAG,"L_TO_R :"+mScaleValue+"");
+                Log.d("SVX 5 :",mScaleValue+"");
 
                 scrollViewMenu.setTranslationX(transitionValue);
                 layoutParams = (RelativeLayout.LayoutParams) cvInner.getLayoutParams();
@@ -738,6 +752,10 @@ public class ResideMenu extends FrameLayout {
                 /*
                  * when right to left swipe
                  * */
+                Log.d("SVX 3 :",mScaleValue+"");
+                Log.d(TAG,"R_TO_L"+mScaleValue+"");
+
+
                 isOpened=true;
                 showScrollViewMenu(scrollViewMenu);
                 scrollViewMenu.setTranslationX(transitionValue);
@@ -762,8 +780,7 @@ public class ResideMenu extends FrameLayout {
                         cvInner.requestLayout();
                     }
                 });
-
-
+                if(mScaleValue>0.41){
                 AnimatorSet scaleDown_activity = buildScaleDownAnimationDublicate(viewActivity, mScaleValue, mScaleValueY * multiPlyerValye, TAG,rotationY);
                 AnimatorSet scaleDown_shadow = buildScaleDownAnimationDublicate(imageViewShadow,
                         (mScaleValue + shadowAdjustScaleX), (mScaleValueY + shadowAdjustScaleY) * multiPlyerValye, TAG, rotationY);
@@ -773,7 +790,7 @@ public class ResideMenu extends FrameLayout {
                 scaleDown_activity.setDuration(0);
                 scaleDown_activity.setInterpolator(AnimationUtils.loadInterpolator(activity, android.R.anim.decelerate_interpolator));
                 scaleDown_activity.start();
-
+                }
             }
 
 
