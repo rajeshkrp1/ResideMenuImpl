@@ -687,7 +687,7 @@ public class ResideMenu extends FrameLayout {
             } else {
                 mScaleValue = 1.0f;
                 mScaleValueY = 1.0f;
-                scrollViewMenu.setTranslationX(transitionValue);
+               scrollViewMenu.setTranslationX(transitionValue);
 
                 isOpened = false;
                 AnimatorSet scaleUp_activity = buildScaleUpAnimation(viewActivity, mScaleValue, mScaleValueY, TAG);
@@ -1016,7 +1016,7 @@ public class ResideMenu extends FrameLayout {
 
         if (mUse3D) {
             int angle = scaleDirection == DIRECTION_LEFT ? -ROTATE_Y_ANGLE : ROTATE_Y_ANGLE;
-            ObjectAnimator rotationY = ObjectAnimator.ofFloat(target, "rotationY", 0f - (float) 10);
+            ObjectAnimator rotationY = ObjectAnimator.ofFloat(target, "rotationY", 0f - (float) 8);
             rotationY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {

@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                                 //  Double rotatinY= ((0.0-10.0)/getScreenWidth())*moving;
-                                Double rotatinY = ((-10 - 0.0) / (getScreenWidth()) * (moving)) + mPreviousRotationY;
+                                Double rotatinY = ((-8 - 0.0) / (getScreenWidth()) * (moving)) + mPreviousRotationY;
                                 mRotationY = rotatinY.floatValue();
                                     openedDoorPreviousRotationY=mRotationY;
                                 Log.d(TAG, "mRotationY :" + rotatinY.floatValue());
@@ -312,11 +312,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }else   mScaleValueY=0.656f;
 
                                     // for RotationY
-                                    Double d12 = ((-10 - 0.0) / (getScreenWidth()) * (moving)) + openedDoorPreviousRotationY;
+                                    Double d12 = ((-8 - 0.0) / (getScreenWidth()) * (moving)) + openedDoorPreviousRotationY;
 
-                                        if(d12.floatValue()>=-10){
+                                        if(d12.floatValue()>=-8){
                                             mRotationY=d12.floatValue();
-                                        }else  mRotationY=-10;
+                                        }else  mRotationY=-8;
 
                                     Log.d(TAG,"SVX : 7 "+d.floatValue());
                                     Log.d(TAG,"SVX : 8 "+y1.floatValue());
@@ -377,7 +377,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                 // for mRotationY
                                 // mRotationY= ((0-10)/(float)getScreenWidth())*moving;
-                                Double d12 = ((-10 - 0.0) / (getScreenWidth()) * (moving)) + 0.0;
+                                Double d12 = ((-8 - 0.0) / (getScreenWidth()) * (moving)) + 0.0;
                                 mRotationY=d12.floatValue();
                                 mPreviousRotationY=d12.floatValue();
                                 Log.d(TAG, "ACTION_MOVE: mRotationY : " + mRotationY);
@@ -386,8 +386,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 alphaAnimation=alphaAnim.floatValue();
                                 previousAlphaAnimation=alphaAnimation;
                                 Log.d(TAG, "ACTION_MOVE: alphaAnimation : " + alphaAnimation);
-
-
 
 
 
