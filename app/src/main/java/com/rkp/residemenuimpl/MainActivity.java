@@ -17,7 +17,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final int DIRECTION_RIGHT = 1;
     private static final String TAG = "MainActivity";
     private static final float SWIPE_THRESHOLD = 100f;
-    private static final float SWIPE_VELOCITY_THRESHOLD =100 ;
+    private static final float SWIPE_VELOCITY_THRESHOLD = 100;
     CardView cvInner, cvDashboard;
     FrameLayout fl_image;
     int x1, x2, y1, y2, dx, dy;
@@ -42,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     float mPreviousScaleX, mPrevipousScaleValue;
     String direction;
     Context mContext;
+    float mRotationY, mPreviousRotationY;
+    float mXNegative, mYNegative, openedDoorPreviousRotationY;
     private ResideMenu resideMenu;
     private RelativeLayout.LayoutParams layoutParams;
     private FrameLayout.LayoutParams fragParams;
@@ -56,21 +57,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AnimatorSet animatorSet;
     private int percentage;
     private float lastActionDownX, lastActionDownY;
-    private float alphaAnimation,previousAlphaAnimation;
+    private float alphaAnimation, previousAlphaAnimation;
     private boolean isFingureUp;
     private boolean moreThanOneSwipe, rightSwipeMoreThanOne;
     private DisplayMetrics displayMetrics = new DisplayMetrics();
     private AppBarLayout appBar;
-    private  float mOuterRadiusValue,outerRadiusPreviousValue,mInerRadius,inerRadiusPreviousValue;
-    private float transitionValue,previousTransitionValue;
-    float mRotationY,mPreviousRotationY;
+    private float mOuterRadiusValue, outerRadiusPreviousValue, mInerRadius, inerRadiusPreviousValue;
+    private float transitionValue, previousTransitionValue;
     private GestureDetector gestureDetector;
     private int flingState;   /// 1 for open 2 for close
-    float mXNegative, mYNegative,openedDoorPreviousRotationY;
-    private  boolean doorOpenFromProfilClick;
+    private boolean doorOpenFromProfilClick;
     private boolean isOpenThenLeftSwipe;
-    private boolean isClickAction=true;
-
+    private boolean isClickAction = true;
+    private RelativeLayout rl_include;
 
 
     private ResideMenu.OnMenuDublicateListener menuDublicateListener = new ResideMenu.OnMenuDublicateListener() {
@@ -483,16 +482,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
         });
+
+
+
     }
 
 /*
-
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         return resideMenu.dispatchTouchEvent(ev);
 
-    }
-*/
+    }*/
 
 
     private void initViews() {
@@ -503,7 +503,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int height = displayMetrics.heightPixels;
         screenWidth = displayMetrics.widthPixels;
 
-         gestureDetector = new GestureDetector(new GestureListener());
+        gestureDetector = new GestureDetector(new GestureListener());
 
         Log.d(TAG, screenWidth + "    screen");
         Log.d(TAG, "screenWidth" + getScreenWidth() + "");
@@ -514,36 +514,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cvInner = findViewById(R.id.cv_inner);
         cvDashboard = findViewById(R.id.cv_dashboard);
         fl_image = findViewById(R.id.fl_image_home);
-        appBar=findViewById(R.id.app_bar);
+        appBar = findViewById(R.id.app_bar);
+
         //fl_image.setOnClickListener(this);
-
-
 
         fl_image.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-               // gestureDetector.onTouchEvent(event);
-                switch(event.getAction()){
+                // gestureDetector.onTouchEvent(event);
+                int action = event.getAction();
+                switch (event.getAction() ) {
 
                     case MotionEvent.ACTION_DOWN:
-                        Log.d("CLICK","down");
+                        Log.d("CLICK", "down");
 
                         lastActionDownX = event.getRawX();
                         lastActionDownY = event.getRawY();
-                        isFingureUp=false;
-                        isClickAction=true;
+                        isFingureUp = false;
+                        isClickAction = true;
                         startX = event.getRawX();
                         x1 = (int) event.getX();
                         y1 = (int) event.getY();
                         Log.d(TAG, "ACTION_DOWN: getX " + startX);
 
-
-
                         break;
                     case (MotionEvent.ACTION_MOVE):
-                        isClickAction=false;
-                        Log.d("CLICK","Move");
+                        isClickAction = false;
+                        Log.d("CLICK", "Move");
 
                         Log.d(TAG, "ACTION_MOVE: getScreenWidth" + getScreenWidth());
                         Log.d(TAG, "ACTION_MOVE: getScreenHeight" + getScreenHeight());
@@ -565,14 +563,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d(TAG, "ACTION_MOVE: event.getX() " + event.getRawX());
                         Log.d(TAG, "ACTION_MOVE: isFingureUp " + isFingureUp);
 
-                        if(isOpened){
+                        if (isOpened) {
 
                             /*
                              * this block for closing door
                              * */
 
-                            if(xOffset>0) {
-                                isOpenThenLeftSwipe=true;
+                            if (xOffset > 0) {
+                                isOpenThenLeftSwipe = true;
 
                                 if (doorOpenFromProfilClick) {
 
@@ -586,53 +584,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                     // mScaleValue=d2.floatValue();
 
-                                    if(d2.floatValue()<0.41){
-                                        mScaleValue=0.41f;
-                                    }else {
-                                        mScaleValue=d2.floatValue();
+                                    if (d2.floatValue() < 0.41) {
+                                        mScaleValue = 0.41f;
+                                    } else {
+                                        mScaleValue = d2.floatValue();
                                     }
-                                    Log.d("TAG","dOpenFromClick mScaleValue :"+mScaleValue);
+                                    Log.d("TAG", "dOpenFromClick mScaleValue :" + mScaleValue);
 
                                     Double yd1 = (((0.656 - 1) / getScreenWidth()) * moving) + 0.656;
                                     //mScaleValueY=yd1.floatValue();
 
-                                    if(yd1<0.656){
-                                        mScaleValueY=0.656f;
-                                    }else {
-                                        mScaleValueY=yd1.floatValue();
+                                    if (yd1 < 0.656) {
+                                        mScaleValueY = 0.656f;
+                                    } else {
+                                        mScaleValueY = yd1.floatValue();
                                     }
-                                    Log.d("TAG","dOpenFromClick mScaleValueY :"+mScaleValueY);
+                                    Log.d("TAG", "dOpenFromClick mScaleValueY :" + mScaleValueY);
 
                                     Double d12 = ((-10 - 0.0) / (getScreenWidth()) * (moving)) + (-10);
 
-                                    if(d12<-10){
-                                        mRotationY=-10;
-                                    }else { mRotationY=d12.floatValue();}
-                                    Log.d("TAG","dOpenFromClick mRotationY :"+d12.floatValue());
+                                    if (d12 < -10) {
+                                        mRotationY = -10;
+                                    } else {
+                                        mRotationY = d12.floatValue();
+                                    }
+                                    Log.d("TAG", "dOpenFromClick mRotationY :" + d12.floatValue());
                                     //  Log.d("TAG","PROFILE :"+d12.floatValue());
 
                                     Double outerRadius = ((35 - 0.45) / (getScreenWidth()) * (moving)) + 35;
 
-                                    if(outerRadius>35){
-                                        mOuterRadiusValue=35;
-                                    }else mOuterRadiusValue=outerRadius.floatValue();
-                                    Log.d("TAG","dOpenFromClick mOuterRadiusValue :"+mOuterRadiusValue);
+                                    if (outerRadius > 35) {
+                                        mOuterRadiusValue = 35;
+                                    } else mOuterRadiusValue = outerRadius.floatValue();
+                                    Log.d("TAG", "dOpenFromClick mOuterRadiusValue :" + mOuterRadiusValue);
 
                                     Double inerRadius = ((28 - 0.45) / (getScreenWidth()) * (moving)) + 28;
 
-                                    if(inerRadius>28){
-                                        mInerRadius=28;
-                                    }else mInerRadius=inerRadius.floatValue();
-                                    Log.d("TAG","dOpenFromClick mInerRadius :"+mInerRadius);
+                                    if (inerRadius > 28) {
+                                        mInerRadius = 28;
+                                    } else mInerRadius = inerRadius.floatValue();
+                                    Log.d("TAG", "dOpenFromClick mInerRadius :" + mInerRadius);
 
 
                                     // for rotationY
-                                    Double aa = (((0.0-600 ) / (getScreenWidth())) * (moving)) + 0;
-                                    Log.d("TAG","dOpenFromClick mRotationY :"+aa.floatValue());
-                                    if(aa<0){
-                                        transitionValue=0;
-                                    }else transitionValue=aa.floatValue();
-
+                                    Double aa = (((0.0 - 600) / (getScreenWidth())) * (moving)) + 0;
+                                    Log.d("TAG", "dOpenFromClick mRotationY :" + aa.floatValue());
+                                    if (aa < 0) {
+                                        transitionValue = 0;
+                                    } else transitionValue = aa.floatValue();
 
 
                                 } else {
@@ -654,7 +653,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     Double yd1 = (((0.41 - 1) / getScreenHeight()) * moving) + mScaleValueYprevious;
                                     // Double yd1 = (((0.768-1)/(0.45-1)) * (mScaleValue)) + mScaleValueYprevious;
                                     mScaleValueY = yd1.floatValue();
-                                    mYNegative=mScaleValueY;
+                                    mYNegative = mScaleValueY;
                                     Log.d(TAG, "ewewewe 1 " + mScaleValueYprevious);
                                     Log.d(TAG, "ewewewe 2 " + mScaleValueY);
 
@@ -687,7 +686,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     //  Double rotatinY= ((0.0-10.0)/getScreenWidth())*moving;
                                     Double rotatinY = ((-8 - 0.0) / (getScreenWidth()) * (moving)) + mPreviousRotationY;
                                     mRotationY = rotatinY.floatValue();
-                                    openedDoorPreviousRotationY=mRotationY;
+                                    openedDoorPreviousRotationY = mRotationY;
                                     Log.d(TAG, "mRotationY :" + rotatinY.floatValue());
 
                                     // for alphaAnimation
@@ -696,36 +695,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     Log.d(TAG, "alphaAnim :" + alphaAnim.floatValue());
                                 }
 
-                            }else {
+                            } else {
                                 /*
                                  * door open but swipe left
                                  * */
-                                if(isOpenThenLeftSwipe && !doorOpenFromProfilClick){
-                                    Double d = new Double(((0.41 -1) / (getScreenWidth()) * (moving)) + mXNegative);
+                                if (isOpenThenLeftSwipe && !doorOpenFromProfilClick) {
+                                    Double d = new Double(((0.41 - 1) / (getScreenWidth()) * (moving)) + mXNegative);
 
-                                    if(d.floatValue()>=0.41){
-                                        mScaleValue=d.floatValue();
-                                    }else mScaleValue=0.41f;
+                                    if (d.floatValue() >= 0.41) {
+                                        mScaleValue = d.floatValue();
+                                    } else mScaleValue = 0.41f;
                                     // for ScaleY
                                     Double y1 = (((0.41 - 1) / (getScreenHeight())) * (moving)) + mYNegative;
-                                    if(y1.floatValue()>=0.656){
-                                        mScaleValueY=y1.floatValue();
-                                    }else   mScaleValueY=0.656f;
+                                    if (y1.floatValue() >= 0.656) {
+                                        mScaleValueY = y1.floatValue();
+                                    } else mScaleValueY = 0.656f;
 
                                     // for RotationY
                                     Double d12 = ((-8 - 0.0) / (getScreenWidth()) * (moving)) + openedDoorPreviousRotationY;
 
-                                    if(d12.floatValue()>=-8){
-                                        mRotationY=d12.floatValue();
-                                    }else  mRotationY=-8;
+                                    if (d12.floatValue() >= -8) {
+                                        mRotationY = d12.floatValue();
+                                    } else mRotationY = -8;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           Log.d(TAG,"SVX : 7 "+d.floatValue());
-                                    Log.d(TAG,"SVX : 8 "+y1.floatValue());
+                                    Log.d(TAG, "SVX : 7 " + d.floatValue());
+                                    Log.d(TAG, "SVX : 8 " + y1.floatValue());
 
                                 }
                             }
 
-                        }else {
+                        } else {
                             /*
                              * this block for opening door
                              * */
@@ -736,7 +735,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             mPreviousScaleX = d.floatValue();
                             mScaleValue = d.floatValue();
                             mPrevipousScaleValue = mScaleValue;
-                            Log.d(TAG,"SVX 1:"+mScaleValue);
+                            Log.d(TAG, "SVX 1:" + mScaleValue);
                             Log.d(TAG, "ACTION_MOVE : mScaleValue : " + mScaleValue);
 
                             // for scaleY
@@ -745,8 +744,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Double y1 = (((0.41 - 1) / (getScreenHeight())) * (moving)) + 1;
                             // Double y1 = (((0.768-1)/(0.45-1)) * (mScaleValue)) + 0.578181;
                             // mScaleValueY = y1.floatValue();
-                            mScaleValueY=y1.floatValue();
-                            if(y1.floatValue()>=0.656 || y1.floatValue()<=1.0f){
+                            mScaleValueY = y1.floatValue();
+                            if (y1.floatValue() >= 0.656 || y1.floatValue() <= 1.0f) {
                                 //  mScaleValueY=y1.floatValue();
                             }
                             //  mScaleValueY=(float) (0.421*moving)+0.578f;
@@ -755,23 +754,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             // for mUuterRadiusValue value
                             Double outerRadius = ((35 - 0.45) / (getScreenWidth()) * (moving)) + .45;
-                            mOuterRadiusValue=outerRadius.floatValue();
-                            outerRadiusPreviousValue=mOuterRadiusValue;
+                            mOuterRadiusValue = outerRadius.floatValue();
+                            outerRadiusPreviousValue = mOuterRadiusValue;
                             Log.d(TAG, "ACTION_MOVE: mOuterRadiusValue : " + mOuterRadiusValue);
 
                             // for inner radious
                             Double inerRadius = ((28 - 0.45) / (getScreenWidth()) * (moving)) + .45;
-                            mInerRadius=inerRadius.floatValue();
-                            inerRadiusPreviousValue=mInerRadius;
+                            mInerRadius = inerRadius.floatValue();
+                            inerRadiusPreviousValue = mInerRadius;
                             Log.d(TAG, "ACTION_MOVE: Inner : " + mInerRadius);
 
                             // for transition
                             //  transitionValue  = (int) (((600-0) / (/*getScreenWidth()/2*/542) * (moving)));
                             // transitionValue  = (int) (((600) / (getScreenWidth()) * (moving))+1);
                             // transitionValue  = (int)2400*mScaleValue-getScreenWidth();
-                            Double aa=(((0.0-600)/(getScreenWidth()))*(moving))+600;
+                            Double aa = (((0.0 - 600) / (getScreenWidth())) * (moving)) + 600;
                             // previousTransitionValue=aa.floatValue();
-                            transitionValue=aa.floatValue();
+                            transitionValue = aa.floatValue();
                             Log.d(TAG, "ACTION_MOVE: transitionValue : " + transitionValue);
                             //Log.d(TAG, "AZ: transitionValue : " + aa.floatValue());
                             Log.d(TAG, "ACTION_MOVE: moving : " + moving);
@@ -779,102 +778,100 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             // for mRotationY
                             // mRotationY= ((0-10)/(float)getScreenWidth())*moving;
                             Double d12 = ((-8 - 0.0) / (getScreenWidth()) * (moving)) + 0.0;
-                            mRotationY=d12.floatValue();
-                            mPreviousRotationY=d12.floatValue();
+                            mRotationY = d12.floatValue();
+                            mPreviousRotationY = d12.floatValue();
                             Log.d(TAG, "ACTION_MOVE: mRotationY : " + mRotationY);
 
-                            Double alphaAnim=(((1-0.0)/getScreenWidth())*moving)+0.0f;
-                            alphaAnimation=alphaAnim.floatValue();
-                            previousAlphaAnimation=alphaAnimation;
+                            Double alphaAnim = (((1 - 0.0) / getScreenWidth()) * moving) + 0.0f;
+                            alphaAnimation = alphaAnim.floatValue();
+                            previousAlphaAnimation = alphaAnimation;
                             Log.d(TAG, "ACTION_MOVE: alphaAnimation : " + alphaAnimation);
 
                         }
 
-                        if(mScaleValue<=1.0f && mScaleValue >=0.41){
-                            Log.d("TAG",mScaleValue+"");
-                            resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*//* moving*/mScaleValue, xOffset, (int) lastActionDownX, x1 / screenWidth, false, isFingureUp, mScaleValueY,mOuterRadiusValue,mInerRadius,transitionValue,mRotationY, alphaAnimation);
+                        if (mScaleValue <= 1.0f && mScaleValue >= 0.41) {
+                            Log.d("TAG", mScaleValue + "");
+                            resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, /*deltaX*//* moving*/mScaleValue, xOffset, (int) lastActionDownX, x1 / screenWidth, false, isFingureUp, mScaleValueY, mOuterRadiusValue, mInerRadius, transitionValue, mRotationY, alphaAnimation);
                         }
-
-
 
 
                         break;
                     case MotionEvent.ACTION_UP:
-                        Log.d("CLICK","ACtion UP");
-                        if(!isClickAction){
+                        Log.d("CLICK", "ACtion UP");
+                        if (!isClickAction) {
                             isFingureUp = true;
-                            doorOpenFromProfilClick=false;
-                            isOpenThenLeftSwipe=false;
-                            Log.d("AAAA 2","ACTION_UP");
+                            doorOpenFromProfilClick = false;
+                            isOpenThenLeftSwipe = false;
+                            Log.d("AAAA 2", "ACTION_UP");
 
                             x2 = (int) event.getX();
                             y2 = (int) event.getY();
 
-                            Log.d(TAG,"mScaleValue"+mScaleValue);
-                            Log.d(TAG,"mScaleValueY"+mScaleValueY);
+                            Log.d(TAG, "mScaleValue" + mScaleValue);
+                            Log.d(TAG, "mScaleValueY" + mScaleValueY);
 
                             dx = x2 - x1;
                             //  int xOfffset = (int) (event.getX() - lastActionDownX);
                             int xOfffset = (int) (event.getRawX() - lastActionDownX);
 
                             float deltaX = -(event.getRawX() - startX);
-                            int directionOffset=xOfffset;
+                            int directionOffset = xOfffset;
 
 
-                            if(flingState==1  /* fling State 1 for open door and 2 for close door*/){
-                                mScaleValue=0.41f;
-                                mScaleValueY=0.656f;
-                                transitionValue=0;
+                            if (flingState == 1  /* fling State 1 for open door and 2 for close door*/) {
+                                mScaleValue = 0.41f;
+                                mScaleValueY = 0.656f;
+                                transitionValue = 0;
 
-                                mRotationY=-10;
-                                mInerRadius=28;
-                                directionOffset=-xOfffset;
-                                isOpened=true;
-                                flingState=0;
+                                mRotationY = -10;
+                                mInerRadius = 28;
+                                directionOffset = -xOfffset;
+                                isOpened = true;
+                                flingState = 0;
 
-                            }else if(flingState==2){
-                                mScaleValue=1.0f;
-                                mScaleValueY=1.0f;
-                                transitionValue=600-transitionValue;
-                                mRotationY=0;
-                                mInerRadius=0;
-                                directionOffset=xOfffset;
-                                isOpened=false;
-                                flingState=0;
-                            }else if(mScaleValue<0.57){
+                            } else if (flingState == 2) {
+                                mScaleValue = 1.0f;
+                                mScaleValueY = 1.0f;
+                                transitionValue = 600 - transitionValue;
+                                mRotationY = 0;
+                                mInerRadius = 0;
+                                directionOffset = xOfffset;
+                                isOpened = false;
+                                flingState = 0;
+                            } else if (mScaleValue < 0.57) {
 
-                                mScaleValue=0.41f;
-                                mScaleValueY=0.656f;
-                                transitionValue=0;
-                                mRotationY=-10;
-                                mInerRadius=28;
-                                directionOffset=-xOfffset;
-                                isOpened=true;
+                                mScaleValue = 0.41f;
+                                mScaleValueY = 0.656f;
+                                transitionValue = 0;
+                                mRotationY = -10;
+                                mInerRadius = 28;
+                                directionOffset = -xOfffset;
+                                isOpened = true;
 
 
-                            }else {
-                                mScaleValue=1.0f;
-                                mScaleValueY=1.0f;
+                            } else {
+                                mScaleValue = 1.0f;
+                                mScaleValueY = 1.0f;
                                 // transitionValue=600;
-                                transitionValue=600-transitionValue;
-                                mRotationY=0;
-                                mInerRadius=0;
-                                directionOffset=xOfffset;
-                                isOpened=false;
+                                transitionValue = 600 - transitionValue;
+                                mRotationY = 0;
+                                mInerRadius = 0;
+                                directionOffset = xOfffset;
+                                isOpened = false;
 
                             }
 
-                            Log.d(TAG,"ACTION_UP mScaleValue :"+mScaleValue);
-                            Log.d(TAG,"ACTION_UP mScaleValueY :"+mScaleValueY);
-                            Log.d(TAG,"ACTION_UP isOpened :"+isOpened);
-                            resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT,mScaleValue , directionOffset, (int) lastActionDownX, x1 / screenWidth, false, true, mScaleValueY,mOuterRadiusValue,mInerRadius,transitionValue,mRotationY,alphaAnimation);
+                            Log.d(TAG, "ACTION_UP mScaleValue :" + mScaleValue);
+                            Log.d(TAG, "ACTION_UP mScaleValueY :" + mScaleValueY);
+                            Log.d(TAG, "ACTION_UP isOpened :" + isOpened);
+                            resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, mScaleValue, directionOffset, (int) lastActionDownX, x1 / screenWidth, false, true, mScaleValueY, mOuterRadiusValue, mInerRadius, transitionValue, mRotationY, alphaAnimation);
 
 
-                        }else {
-                            if(isOpened){
+                        } else {
+                            if (isOpened) {
                                 resideMenu.closeMenu();
-                                isOpened=false;
-                            }else{
+                                isOpened = false;
+                            } else {
                                 resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
                                 setPreviousStateData();
                             }
@@ -884,15 +881,97 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         break;
 
+
+                    case MotionEvent.ACTION_CANCEL:
+                        Log.d("CLICK", "ACTION_CANCEL");
+                        if (!isClickAction) {
+                            isFingureUp = true;
+                            doorOpenFromProfilClick = false;
+                            isOpenThenLeftSwipe = false;
+                            Log.d("AAAA 2", "ACTION_UP");
+
+                            x2 = (int) event.getX();
+                            y2 = (int) event.getY();
+
+                            Log.d(TAG, "mScaleValue" + mScaleValue);
+                            Log.d(TAG, "mScaleValueY" + mScaleValueY);
+
+                            dx = x2 - x1;
+                            //  int xOfffset = (int) (event.getX() - lastActionDownX);
+                            int xOfffset = (int) (event.getRawX() - lastActionDownX);
+
+                            float deltaX = -(event.getRawX() - startX);
+                            int directionOffset = xOfffset;
+
+
+                            if (flingState == 1 /*fling State 1 for open door and 2 for close door*/) {
+                                mScaleValue = 0.41f;
+                                mScaleValueY = 0.656f;
+                                transitionValue = 0;
+
+                                mRotationY = -10;
+                                mInerRadius = 28;
+                                directionOffset = -xOfffset;
+                                isOpened = true;
+                                flingState = 0;
+
+                            } else if (flingState == 2) {
+                                mScaleValue = 1.0f;
+                                mScaleValueY = 1.0f;
+                                transitionValue = 600 - transitionValue;
+                                mRotationY = 0;
+                                mInerRadius = 0;
+                                directionOffset = xOfffset;
+                                isOpened = false;
+                                flingState = 0;
+                            } else if (mScaleValue < 0.57) {
+
+                                mScaleValue = 0.41f;
+                                mScaleValueY = 0.656f;
+                                transitionValue = 0;
+                                mRotationY = -10;
+                                mInerRadius = 28;
+                                directionOffset = -xOfffset;
+                                isOpened = true;
+
+
+                            } else {
+                                mScaleValue = 1.0f;
+                                mScaleValueY = 1.0f;
+                                // transitionValue=600;
+                                transitionValue = 600 - transitionValue;
+                                mRotationY = 0;
+                                mInerRadius = 0;
+                                directionOffset = xOfffset;
+                                isOpened = false;
+
+                            }
+
+                            Log.d(TAG, "ACTION_UP mScaleValue :" + mScaleValue);
+                            Log.d(TAG, "ACTION_UP mScaleValueY :" + mScaleValueY);
+                            Log.d(TAG, "ACTION_UP isOpened :" + isOpened);
+                            resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, mScaleValue, directionOffset, (int) lastActionDownX, x1 / screenWidth, false, true, mScaleValueY, mOuterRadiusValue, mInerRadius, transitionValue, mRotationY, alphaAnimation);
+
+
+                        } else {
+                            if (isOpened) {
+                                resideMenu.closeMenu();
+                                isOpened = false;
+                            } else {
+                                resideMenu.openMenu(ResideMenu.DIRECTION_RIGHT);
+                                setPreviousStateData();
+                            }
+
+                        }
+
+
+                        break;
                     case MotionEvent.ACTION_HOVER_ENTER:
-                        Log.d("CLICK","ACTION_HOVER_ENTER");
+                        Log.d("CLICK", "ACTION_HOVER_ENTER");
                         break;
 
 
-
-
                 }
-
 
 
                 return true;
@@ -908,8 +987,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-        else {
+        } else {
             View decorView = getWindow().getDecorView();
             // Show Status Bar.
             int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
@@ -922,10 +1000,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         );
 
 
-
-
     }
-
 
 
     @Override
@@ -949,7 +1024,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fl_image_home:
-                Log.d("CLICK","click");
+                Log.d("CLICK", "click");
                /* if(isOpened){
                     resideMenu.closeMenu();
                     isOpened=false;
@@ -964,10 +1039,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setPreviousStateData() {
-        mScaleValue=0.41f;
-        mScaleValueY=0.656f;
-        doorOpenFromProfilClick=true;
-        isOpened=true;
+        mScaleValue = 0.41f;
+        mScaleValueY = 0.656f;
+        doorOpenFromProfilClick = true;
+        isOpened = true;
 
     }
 
@@ -982,42 +1057,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return displayMetrics.widthPixels;
     }
 
+    private void onSwipRight() {
+        Log.d("AAAA", "Right Swipe");
+        flingState = 2;
+    }
+
+    private void onSwipeLeft() {
+        Log.d("AAAA", "Left Swipe");
+        flingState = 1;
+
+    }
 
     private class GestureListener extends SimpleOnGestureListener {
         @Override
         public boolean onFling(MotionEvent downEvent, MotionEvent upEvent, float velocityX, float velocityY) {
-            boolean result=false;
-            float diffY=upEvent.getY()-downEvent.getY();
-            float diffX=upEvent.getRawX()-downEvent.getRawX();
+            boolean result = false;
+            float diffY = upEvent.getY() - downEvent.getY();
+            float diffX = upEvent.getRawX() - downEvent.getRawX();
             // which was graeter moovement across X or Y ?
-            if(Math.abs(diffX)>Math.abs(diffY)){
+            if (Math.abs(diffX) > Math.abs(diffY)) {
                 //  right or left swipe
-                if(Math.abs(diffX)>SWIPE_THRESHOLD && Math.abs(velocityX)>SWIPE_VELOCITY_THRESHOLD){
-                    if(diffX>0){
+                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffX > 0) {
                         onSwipRight();
-                    }else {
+                    } else {
                         onSwipeLeft();
                     }
                 }
 
-            }else {
+            } else {
                 // top or bottom swipe
             }
             return result;
         }
     }
-
-    private void onSwipRight() {
-        Log.d("AAAA","Right Swipe");
-        flingState=2;
-    }
-    private void onSwipeLeft() {
-        Log.d("AAAA","Left Swipe");
-        flingState=1;
-
-    }
-
-
 
 
 }

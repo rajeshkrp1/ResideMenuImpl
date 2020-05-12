@@ -492,7 +492,6 @@ public class ResideMenu extends FrameLayout {
         this.menuDublicateListener = menuListener;
     }
 
-
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         // Edge Swipe

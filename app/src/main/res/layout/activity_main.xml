@@ -27,46 +27,6 @@
             android:fitsSystemWindows="true"
             app:cardElevation="0dp">
 
-
-           <!-- <RelativeLayout
-                android:id="@+id/rl_aertrip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="@dimen/_20sdp"
-
-                android:visibility="visible"
-
-                android:background="@color/colorPrimary"
-
-
-                >
-
-
-
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_icon"
-                    android:layout_width="@dimen/_50sdp"
-                    android:layout_height="@dimen/_50sdp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerHorizontal="true"
-                    android:padding="@dimen/_2sdp"
-                    android:backgroundTint="@color/colorAccent"
-                    android:src="@drawable/ic_launcher_background"
-                    tools:src="@drawable/ic_launcher" />
-
-
-                <View
-                    android:id="@+id/v_right"
-                    android:layout_width="@dimen/_50sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="100dp" />
-
-            </RelativeLayout>-->
-
             <RelativeLayout
                 android:id="@+id/linear_layout_dashboard"
                 android:layout_width="match_parent"
@@ -95,75 +55,74 @@
                         app:elevation="0dp">
 
 
-                            <RelativeLayout
-                                android:id="@+id/rl_include"
+                        <RelativeLayout
+                            android:id="@+id/rl_include"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:elevation="@dimen/_90sdp">
 
+                            <androidx.appcompat.widget.Toolbar
+                                android:id="@+id/toolbar_main"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:elevation="@dimen/_90sdp">
+                                android:layout_height="?attr/actionBarSize"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:background="@android:color/transparent"
+                                android:gravity="end"
+                                android:theme="@style/ToolbarStyle"
+                                app:contentInsetStartWithNavigation="0dp">
 
-                                <androidx.appcompat.widget.Toolbar
-                                    android:id="@+id/toolbar_main"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="?attr/actionBarSize"
-                                    android:layout_marginTop="@dimen/_20sdp"
-                                    android:background="@android:color/transparent"
-                                    android:gravity="end"
-                                    android:theme="@style/ToolbarStyle"
-                                    app:contentInsetStartWithNavigation="0dp"
-                                    >
+                                <ImageView
+                                    android:id="@+id/image_view_secondary"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:contentDescription="@null"
+                                    android:paddingStart="@dimen/_8sdp"
+                                    android:paddingLeft="@dimen/_8sdp"
+                                    android:src="@drawable/ic_launcher"
+                                    android:visibility="gone"
+                                    tools:ignore="VectorDrawableCompat" />
 
-                                    <ImageView
-                                        android:id="@+id/image_view_secondary"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:contentDescription="@null"
-                                        android:paddingStart="@dimen/_8sdp"
-                                        android:paddingLeft="@dimen/_8sdp"
+                                <TextView
+                                    android:id="@+id/textView_toolbar_title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="@dimen/_8sdp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone"
+                                    tools:text="Aertrip" />
+
+                                <FrameLayout
+                                    android:id="@+id/fl_image_home"
+                                    android:layout_width="@dimen/_55sdp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="end"
+                                    android:background="@color/line_grey">
+
+
+                                    <de.hdodenhof.circleimageview.CircleImageView
+                                        android:id="@+id/iv_profile"
+                                        android:layout_width="@dimen/_25sdp"
+                                        android:layout_height="@dimen/_25sdp"
+                                        android:layout_gravity="center"
+                                        android:padding="@dimen/_2sdp"
                                         android:src="@drawable/ic_launcher"
                                         android:visibility="gone"
-                                        tools:ignore="VectorDrawableCompat" />
+                                        app:civ_border_color="@color/text_grey" />
 
-                                    <TextView
-                                        android:id="@+id/textView_toolbar_title"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="@color/colorWhite"
-                                        android:textSize="@dimen/_8sdp"
-                                        android:textStyle="bold"
-                                        android:visibility="gone"
-                                        tools:text="Aertrip" />
+                                    <ImageView
+                                        android:id="@+id/iv_profile_placeholder"
+                                        android:layout_width="@dimen/_20sdp"
+                                        android:layout_height="@dimen/_20sdp"
+                                        android:layout_gravity="center"
+                                        android:padding="@dimen/_2sdp"
+                                        android:src="@drawable/profile" />
 
-                                    <FrameLayout
-                                        android:id="@+id/fl_image_home"
-android:background="@color/line_grey"
-                                        android:layout_width="@dimen/_55sdp"
-                                        android:layout_height="match_parent"
-                                        android:layout_gravity="end">
+                                </FrameLayout>
 
-                                        <de.hdodenhof.circleimageview.CircleImageView
-                                            android:id="@+id/iv_profile"
-                                            android:layout_width="@dimen/_25sdp"
-                                            android:layout_height="@dimen/_25sdp"
-                                            android:layout_gravity="center"
-                                            android:padding="@dimen/_2sdp"
-                                            android:src="@drawable/ic_launcher"
-                                            android:visibility="gone"
-                                            app:civ_border_color="@color/text_grey" />
+                            </androidx.appcompat.widget.Toolbar>
 
-                                        <ImageView
-                                            android:id="@+id/iv_profile_placeholder"
-                                            android:layout_width="@dimen/_20sdp"
-                                            android:layout_height="@dimen/_20sdp"
-                                            android:layout_gravity="center"
-                                            android:padding="@dimen/_2sdp"
-                                            android:src="@drawable/profile" />
-
-                                    </FrameLayout>
-
-                                </androidx.appcompat.widget.Toolbar>
-
-                            </RelativeLayout>
+                        </RelativeLayout>
 
 
 
@@ -173,9 +132,6 @@ android:background="@color/line_grey"
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             </RelativeLayout>
-
-
-
 
 
         </androidx.cardview.widget.CardView>
