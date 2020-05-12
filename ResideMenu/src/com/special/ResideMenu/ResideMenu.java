@@ -54,6 +54,7 @@ public class ResideMenu extends FrameLayout {
     private View scrollViewRightMenu;
     private View scrollViewMenu;
     private int scrW;
+    private float mTrans;
     /**
      * Current attaching activity.
      */
@@ -571,7 +572,7 @@ public class ResideMenu extends FrameLayout {
 * */
     public void openDublicateMenu(int direction, float mScaleValue, int xOffSet, int lastActionDownX, int scaleX, boolean openstatus, boolean touchEventStateUp, float mScaleValueY, float outerRadiusValue, float inerRadiusValue, float transitionValue, float rotationY, float alphaAnimation) {
         final String TAG = ResideMenu.TAG_DEFAULT + "|openDMenu";
-
+        this.mTrans=transitionValue;
         if (!openMenuStarted) {
             cvDashboard.setCardElevation(activity.getResources().getDimension(R.dimen._10sdp));
             cvDashboard.setElevation(activity.getResources().getDimension(R.dimen._10sdp));
@@ -623,6 +624,7 @@ public class ResideMenu extends FrameLayout {
                 Log.d(TAG, "onAnimationUpdate: translationClose " + animation.getAnimatedValue());
             }
         });
+
 
         ValueAnimator animatorClose = ValueAnimator.ofInt((int) getResources().getDimension(R.dimen._8sdp), 0);
         animatorClose.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -687,7 +689,23 @@ public class ResideMenu extends FrameLayout {
             } else {
                 mScaleValue = 1.0f;
                 mScaleValueY = 1.0f;
-               scrollViewMenu.setTranslationX(transitionValue);
+              // scrollViewMenu.setTranslationX(transitionValue);
+
+
+
+                PropertyValuesHolder translateXc = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0, transitionValue);
+                ObjectAnimator translationClo = ObjectAnimator.ofPropertyValuesHolder(layoutRightMenu, translateXc);
+                translationClo.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        layoutRightMenu.setTranslationX((float)animation.getAnimatedValue());
+                        Log.d(TAG, "onAnimationUpdate: translationClose " + animation.getAnimatedValue());
+                    }
+                });
+                translationClo.setDuration(0);
+                translationClo.start();
+
+
 
                 isOpened = false;
                 AnimatorSet scaleUp_activity = buildScaleUpAnimation(viewActivity, mScaleValue, mScaleValueY, TAG);
@@ -714,7 +732,7 @@ public class ResideMenu extends FrameLayout {
                 Log.d(TAG,"L_TO_R :"+mScaleValue+"");
                 Log.d("SVX 5 :",mScaleValue+"");
 
-                scrollViewMenu.setTranslationX(transitionValue);
+               // scrollViewMenu.setTranslationX(transitionValue);
 
                 layoutParams = (RelativeLayout.LayoutParams) cvInner.getLayoutParams();
                 ValueAnimator dynamicCloseAnimator = ValueAnimator.ofInt(0,(int)inerRadiusValue);
@@ -739,6 +757,19 @@ public class ResideMenu extends FrameLayout {
                         cvDashboard.requestLayout();
                     }
                 });
+
+                PropertyValuesHolder translateXc = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0, transitionValue);
+                ObjectAnimator translationClo = ObjectAnimator.ofPropertyValuesHolder(layoutRightMenu, translateXc);
+                translationClo.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        layoutRightMenu.setTranslationX((float)animation.getAnimatedValue());
+                        Log.d(TAG, "onAnimationUpdate: translationClose " + animation.getAnimatedValue());
+                    }
+                });
+                translationClo.setDuration(0);
+                translationClo.start();
+
 
                 AnimatorSet scaleUp_activity = buildScaleUpAnimationDublicate(viewActivity, mScaleValue, mScaleValueY, TAG,rotationY);
                 AnimatorSet scaleUp_shadow = buildScaleUpAnimationDublicate(imageViewShadow, (mScaleValue+shadowAdjustScaleX), (mScaleValueY+shadowAdjustScaleY), TAG, rotationY);

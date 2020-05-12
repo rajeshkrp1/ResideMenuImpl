@@ -136,7 +136,7 @@
 
                                     <FrameLayout
                                         android:id="@+id/fl_image_home"
-
+android:background="@color/line_grey"
                                         android:layout_width="@dimen/_55sdp"
                                         android:layout_height="match_parent"
                                         android:layout_gravity="end">

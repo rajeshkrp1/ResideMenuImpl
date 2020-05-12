@@ -97,7 +97,7 @@ public class Test extends AppCompatActivity {
 //            scaleDown_activity.setDuration(0);
 //            scaleDown_activity.setInterpolator(AnimationUtils.loadInterpolator(activity, android.R.anim.decelerate_interpolator));
 //            scaleDown_activity.start();
-      // }
+      // }ghgh
 
     //}
 
