@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -70,6 +71,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isOpenThenLeftSwipe;
     private boolean isClickAction = true;
     private RelativeLayout rl_include;
+    private View view;
+    Rect outRect = new Rect();
+    int[] location = new int[2];
 
 
     private ResideMenu.OnMenuDublicateListener menuDublicateListener = new ResideMenu.OnMenuDublicateListener() {
@@ -121,8 +125,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         initViews();
 
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        cvDashboard.setOnTouchListener(new View.OnTouchListener() {
+            }
+        });
+        view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 gestureDetector.onTouchEvent(event);
@@ -486,13 +495,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
-
 /*
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+
         return resideMenu.dispatchTouchEvent(ev);
 
     }*/
+
+
 
 
     private void initViews() {
@@ -515,8 +526,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cvDashboard = findViewById(R.id.cv_dashboard);
         fl_image = findViewById(R.id.fl_image_home);
         appBar = findViewById(R.id.app_bar);
+        view = findViewById(R.id.view);
 
-        //fl_image.setOnClickListener(this);
+
+        fl_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         fl_image.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -950,7 +968,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d(TAG, "ACTION_UP mScaleValue :" + mScaleValue);
                             Log.d(TAG, "ACTION_UP mScaleValueY :" + mScaleValueY);
                             Log.d(TAG, "ACTION_UP isOpened :" + isOpened);
-                            resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, mScaleValue, directionOffset, (int) lastActionDownX, x1 / screenWidth, false, true, mScaleValueY, mOuterRadiusValue, mInerRadius, transitionValue, mRotationY, alphaAnimation);
+                           // resideMenu.openDublicateMenu(ResideMenu.DIRECTION_RIGHT, mScaleValue, directionOffset, (int) lastActionDownX, x1 / screenWidth, false, true, mScaleValueY, mOuterRadiusValue, mInerRadius, transitionValue, mRotationY, alphaAnimation);
 
 
                         } else {
@@ -969,7 +987,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case MotionEvent.ACTION_HOVER_ENTER:
                         Log.d("CLICK", "ACTION_HOVER_ENTER");
                         break;
-
 
                 }
 
@@ -1000,6 +1017,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         );
 
 
+    }
+    private boolean isViewInBounds(View view, int x, int y){
+        view.getDrawingRect(outRect);
+        view.getLocationOnScreen(location);
+        outRect.offset(location[0], location[1]);
+        return outRect.contains(x, y);
     }
 
 

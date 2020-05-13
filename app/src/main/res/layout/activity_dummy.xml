@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cv_dashboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:fitsSystemWindows="true"
+    android:background="@color/colorAccent"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:focusableInTouchMode="true"
+
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_150sdp"
+        android:background="@color/c_divider"
+        android:orientation="vertical"
+        >
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:background="@android:color/holo_blue_bright"
+            android:gravity="end"
+            android:theme="@style/ToolbarStyle"
+            app:contentInsetStartWithNavigation="0dp">
+
+            <ImageView
+                android:id="@+id/image_view_secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_8sdp"
+                android:src="@drawable/ic_launcher"
+                android:visibility="gone"
+                tools:ignore="VectorDrawableCompat" />
+
+            <TextView
+                android:id="@+id/textView_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/_8sdp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="Aertrip" />
+
+            <FrameLayout
+                android:id="@+id/fl_image_home"
+                android:layout_width="@dimen/_55sdp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:background="@color/line_grey">
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/iv_profile"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/_2sdp"
+                    android:src="@drawable/ic_launcher"
+                    android:visibility="gone"
+                    app:civ_border_color="@color/text_grey" />
+
+                <ImageView
+                    android:id="@+id/iv_profile_placeholder"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/_2sdp"
+                    android:src="@drawable/profile" />
+
+            </FrameLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View 1"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/c_white"
+            android:padding="@dimen/_10sdp"
+            />
+    </LinearLayout>
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_150sdp"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:background="@color/c_he_verification"
+        >
+
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View 1"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/c_white"
+            android:padding="@dimen/_10sdp"
+            />
+    </LinearLayout>
+
+
+
+</LinearLayout>
+
+
+
+
+
+

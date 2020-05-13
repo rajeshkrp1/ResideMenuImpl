@@ -24,18 +24,7 @@
                 android:layout_gravity="center"
                 app:civ_border_width="@dimen/_5sdp" />
 
-            <!--<android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_initials"
-                android:visibility="gone"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:background="@drawable/bg_white_circle_with_border"
-                android:textColor="@color/c_bg_spinner"
-                android:fontFamily="@font/source_sans_pro_regular"
-                android:textSize="@dimen/_47ssp"
-                tools:text="RV"
-                android:layout_width="@dimen/_92sdp"
-                android:layout_height="@dimen/_92sdp"/>-->
+
 
         </FrameLayout>
 
