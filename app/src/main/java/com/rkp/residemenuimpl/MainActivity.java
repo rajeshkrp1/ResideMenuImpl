@@ -707,6 +707,16 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d(TAG,"SVX : 7 "+d.floatValue());
                                     Log.d(TAG,"SVX : 8 "+y1.floatValue());
 
+                                    Double outerRadius = ((35 - 0.45) / (getScreenWidth()) * (moving)) + mOpenPreviousOuterRadius;
+                                    if(outerRadius.floatValue()<35){
+                                        mOuterRadiusValue=outerRadius.floatValue();
+                                    }else mOuterRadiusValue=35;
+
+                                    Double inerRadius = ((28 - 0.45) / (getScreenWidth()) * (moving)) + mOpenInnerRadius;
+                                    if(inerRadius<28){
+                                        mInerRadius=inerRadius.floatValue();
+                                    }else mInerRadius=28;
+
                                 }
                             }
 
